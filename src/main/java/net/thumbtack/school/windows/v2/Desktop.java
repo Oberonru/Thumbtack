@@ -1,4 +1,4 @@
-package net.thumbtack.school.windows.v1;
+package net.thumbtack.school.windows.v2;
 
 public class Desktop {
     private int width, height;

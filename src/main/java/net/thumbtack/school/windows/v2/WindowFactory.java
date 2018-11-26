@@ -1,19 +1,34 @@
-package net.thumbtack.school.windows.v1;
+package net.thumbtack.school.windows.v2;
+
+import net.thumbtack.school.windows.v2.Point;
+import net.thumbtack.school.windows.v2.RectButton;
+import net.thumbtack.school.windows.v2.RoundButton;
 
 public class WindowFactory {
     //Класс, создающий окна (фабрика окон)
     private static int RectButtonCount, RoundBottonCount;
 
+
     //Создает RectButton по координатам точек и флагу активности.
     public static RectButton createRectButton(Point leftTop, Point rightBottom, boolean active) {
-        RectButtonCount++;
-        return new RectButton(leftTop, rightBottom, active);
+        return createRectButton(leftTop, rightBottom, active, null);
     }
 
-    //Создает RoundButton по координатам центра, значению радиуса и флагу активности.
+    //Создает RectButton по координатам точек и флагу активности.
+    public static RectButton createRectButton(Point leftTop, Point rightBottom, boolean active, String text) {
+        RectButtonCount++;
+        return new RectButton(leftTop, rightBottom, active, text);
+    }
+
+    //Создает RoundButton по координатам центра, значению рад//иуса и флагу активности.
     public static RoundButton createRoundButton(Point center, int radius, boolean active) {
+        return createRoundButton(center, radius, active, null);
+    }
+
+    //Создает RoundButton по координатам центра, значению рад//иуса и флагу активности.
+    public static RoundButton createRoundButton(Point center, int radius, boolean active, String text) {
         RoundBottonCount++;
-        return new RoundButton(center, radius, active);
+        return new RoundButton(center, radius, active, text);
     }
 
     //Возвращает количество RectButton, созданных с помощью метода createRectButton.

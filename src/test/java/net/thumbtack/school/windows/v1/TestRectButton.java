@@ -1,5 +1,8 @@
 package net.thumbtack.school.windows.v1;
 
+import net.thumbtack.school.windows.v2.Desktop;
+import net.thumbtack.school.windows.v2.Point;
+import net.thumbtack.school.windows.v2.RectButton;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

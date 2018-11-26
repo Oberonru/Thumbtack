@@ -1,4 +1,4 @@
-package net.thumbtack.school.windows.v1;
+package net.thumbtack.school.windows.v2;
 
 public class RoundButton {
     //Нажимная круглая кнопка. Для кнопки определено 2 состояния - активна (можно нажать) и пассивна (серого цвета, нажать нельзя).
@@ -7,24 +7,44 @@ public class RoundButton {
     private boolean active = true;
     private int radius;
 
+    private String text;
+
     //Создает RoundButton по координатам центра, значению радиуса и флагу активности.
-    public RoundButton(Point center, int radius, boolean active) {
+    public RoundButton(Point center, int radius, boolean active, String text) {
         this.center = center;
         this.radius = radius;
         this.active = active;
+        this.text = text;
+    }
+
+    public RoundButton(Point center, int radius, boolean active) {
+        this(center, radius, active, null);
+
     }
 
     //Создает RoundButton по координатам центра, значению радиуса и флагу активности.
+    public RoundButton(int xCenter, int yCenter, int radius, boolean active, String text) {
+        this(new Point(xCenter, yCenter), radius, active, text);
+    }
+
     public RoundButton(int xCenter, int yCenter, int radius, boolean active) {
         this(new Point(xCenter, yCenter), radius, active);
     }
 
     //Создает активную RoundButton по координатам центра и значению радиуса.
+    public RoundButton(Point center, int radius, String text) {
+        this(center, radius, true, text);
+    }
+
     public RoundButton(Point center, int radius) {
         this(center, radius, true);
     }
 
     //Создает активную RoundButton по координатам центра и значению радиуса.
+    public RoundButton(int xCenter, int yCenter, int radius, String text) {
+        this(xCenter, yCenter, radius, true, text);
+    }
+
     public RoundButton(int xCenter, int yCenter, int radius) {
         this(xCenter, yCenter, radius, true);
     }
@@ -106,10 +126,17 @@ public class RoundButton {
                 && center.getY() + radius < desktop.getHeight() && center.getY() - radius >= 0;
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof RoundButton)){
+        if (!(obj instanceof RoundButton)) {
             return false;
         }
 

@@ -1,5 +1,6 @@
 package net.thumbtack.school.windows.v1;
 
+import net.thumbtack.school.windows.v2.Desktop;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

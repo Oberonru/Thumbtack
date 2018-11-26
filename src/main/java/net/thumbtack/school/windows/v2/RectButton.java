@@ -1,6 +1,4 @@
-package net.thumbtack.school.windows.v1;
-
-import org.w3c.dom.css.Rect;
+package net.thumbtack.school.windows.v2;
 
 public class RectButton {
     //Нажимная прямоугольная кнопка. Для кнопки определено 2 состояния - активна (можно нажать) и пассивна (серого
@@ -10,27 +8,47 @@ public class RectButton {
     private Point bottomRight;
     boolean active = true;
 
+    private String text;
+
     //Создает RectButton по координатам углов - левого верхнего и правого нижнего, и флагу активности.
     // Обращаем внимание на то, что обе точки входят в кнопку, так что если создать кнопку с topLeft.equals(bottomRight),
     // то будет создана кнопка ширины и высоты 1.
+    public RectButton(Point topLeft, Point bottomRight, boolean active, String text) {
+        this(topLeft, bottomRight, text);
+        this.active = active;
+    }
+
     public RectButton(Point topLeft, Point bottomRight, boolean active) {
         this(topLeft, bottomRight);
         this.active = active;
     }
 
     //Создает RectButton по координатам левого верхнего угла, ширине, высоте и флагу активности.
+    public RectButton(int xLeft, int yTop, int width, int height, boolean active, String text) {
+        this(xLeft, yTop, width, height, text);
+        this.active = active;
+    }
+
     public RectButton(int xLeft, int yTop, int width, int height, boolean active) {
         this(xLeft, yTop, width, height);
         this.active = active;
     }
 
     //Создает активную RectButton по координатам углов - левого верхнего и правого нижнего.
+    public RectButton(Point topLeft, Point bottomRight, String text) {
+        this.topLeft = topLeft;
+        this.bottomRight = bottomRight;
+        this.text = text;
+    }
     public RectButton(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
     }
 
     //Создает активную RectButton по координатам левого верхнего угла, ширине и высоте.
+    public RectButton(int xLeft, int yTop, int width, int height, String text) {
+        this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), text);
+    }
     public RectButton(int xLeft, int yTop, int width, int height) {
         this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1));
     }
@@ -136,6 +154,15 @@ public class RectButton {
         return topLeft.getX() >= 0 && topLeft.getX() <= desktop.getWidth() &&
                 bottomRight.getY() >= 0 && bottomRight.getY() <= desktop.getHeight();
     }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
 
     @Override
     public boolean equals(Object obj) {

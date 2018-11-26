@@ -1,5 +1,9 @@
 package net.thumbtack.school.windows.v1;
 
+import net.thumbtack.school.windows.v2.Point;
+import net.thumbtack.school.windows.v2.RectButton;
+import net.thumbtack.school.windows.v2.RoundButton;
+import net.thumbtack.school.windows.v2.WindowFactory;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
