@@ -1,6 +1,9 @@
 package net.thumbtack.school.base;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class StringOperations {
     //Возвращает суммарную длину строк, заданных массивом strings.
@@ -207,22 +210,11 @@ public class StringOperations {
     //Для заданного массива вещественных чисел создает текстовую строку, в которой числа разделены знаком “запятая”,
     // причем каждое число записывается с двумя знаками после точки. Для пустого массива возвращается пустая строка.
     public static String makeCsvStringFromDoubles(double[] array) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < array.length; i++) {
-            BigDecimal bd = new BigDecimal(array[i]);
-            bd.setScale(2,BigDecimal.ROUND_HALF_UP);
-        }
-
         if (array.length == 0) {
             return "";
         }
-        for (int i = 0; i < array.length; i++) {
-            sb.append(array[i]);
-            if (i < array.length - 1) {
-                sb.append(",");
-            }
-        }
-        return sb.toString();
+
+        return makeCsvStringBuilderFromDoubles(array).toString();
     }
 
 
@@ -243,22 +235,35 @@ public class StringOperations {
 
     //То же, что и в упражнении 26, но возвращает StringBuilder.
     public static StringBuilder makeCsvStringBuilderFromDoubles(double[] array) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < array.length; i++) {
-            sb.append(array[i] + ",");
+            result.append(String.format("%1$,.2f", array[i]));
+            if (i < array.length - 1) {
+                result.append(",");
+            }
         }
-        return sb;
+        return result;
     }
 
     //Удаляет из строки символы, номера которых заданы в массиве positions. Предполагается, что будут передаваться
     // только допустимые номера, упорядоченные по возрастанию. Номера позиций для удаления указаны для исходной строки.
     // Возвращает полученный в результате StringBuilder.
     public static StringBuilder removeCharacters(String string, int[] positions) {
-        StringBuilder sb = new StringBuilder(string);
-        for (int i = string.length() - 1; i >= 0; i--) {
-            return sb.deleteCharAt(positions[i]);
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < string.length(); i++) {
+            boolean exists = false;
+            for (int j = 0; j < positions.length; j++) {
+                if (positions[j] == i) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                result.append(string.charAt(i));
+            }
         }
-        return sb;
+        return result;
     }
 
     //Вставляет в строку символы. Массивы positions и characters имеют одинаковую длину. В позицию positions[i] в
@@ -267,6 +272,15 @@ public class StringOperations {
     // в котором они перечислены в массиве characters. Предполагается, что будут передаваться только допустимые номера,
     // упорядоченные по неубыванию.  Возвращает полученный в результате StringBuilder.
     public static StringBuilder insertCharacters(String string, int[] positions, char[] characters) {
-        return new StringBuilder();
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < string.length(); i++) {
+            for (int j = 0; j < positions.length; j++) {
+                if (positions[j] == i) {
+                    result.append(characters[j]);
+                }
+            }
+            result.append(string.charAt(i));
+        }
+        return result;
     }
 }

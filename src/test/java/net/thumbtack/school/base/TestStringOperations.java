@@ -317,18 +317,18 @@ public class TestStringOperations {
         assertEquals("", StringOperations.makeCsvStringBuilderFromDoubles(array3).toString());
     }
 
-//    @Test
-//    public void testRemoveCharacters() {
-//        assertEquals("13456789", StringOperations.removeCharacters("0123456789", new int[]{0, 2}).toString());
-//        assertEquals("13579", StringOperations.removeCharacters("0123456789", new int[]{0, 2, 4, 6, 8}).toString());
-//        assertEquals("", StringOperations.removeCharacters("0123456789", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}).toString());
-//    }
-//
-//    @Test
-//    public void testInsertCharacters() {
-//        assertEquals("0123456789", StringOperations.insertCharacters("13456789", new int[]{0, 1}, new char[]{'0', '2'}).toString());
-//        assertEquals("0123456789", StringOperations.insertCharacters("13579", new int[]{0, 1, 2, 3, 4}, new char[]{'0', '2', '4', '6', '8'}).toString());
-//        assertEquals("0123456789", StringOperations.insertCharacters("19", new int[]{0, 1, 1, 1, 1, 1, 1, 1}, new char[]{'0', '2', '3', '4', '5', '6', '7', '8'}).toString());
-//    }
+    @Test
+    public void testRemoveCharacters() {
+        assertEquals("13456789", StringOperations.removeCharacters("0123456789", new int[]{0, 2}).toString());
+        assertEquals("13579", StringOperations.removeCharacters("0123456789", new int[]{0, 2, 4, 6, 8}).toString());
+        assertEquals("", StringOperations.removeCharacters("0123456789", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}).toString());
+    }
+
+    @Test
+    public void testInsertCharacters() {
+        assertEquals("0123456789", StringOperations.insertCharacters("13456789", new int[]{0, 1}, new char[]{'0', '2'}).toString());
+        assertEquals("0123456789", StringOperations.insertCharacters("13579", new int[]{0, 1, 2, 3, 4}, new char[]{'0', '2', '4', '6', '8'}).toString());
+        assertEquals("0123456789", StringOperations.insertCharacters("19", new int[]{0, 1, 1, 1, 1, 1, 1, 1}, new char[]{'0', '2', '3', '4', '5', '6', '7', '8'}).toString());
+    }
 
 }

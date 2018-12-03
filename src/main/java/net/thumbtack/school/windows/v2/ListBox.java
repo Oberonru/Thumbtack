@@ -2,9 +2,8 @@ package net.thumbtack.school.windows.v2;
 
 import net.thumbtack.school.base.StringOperations;
 
-import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -101,7 +100,10 @@ public class ListBox {
         if (lines == null) {
             return null;
         }
-        return lines.clone();
+//        String[] linesCopy = new String[lines.length];
+//        System.arraycopy(lines,0,linesCopy,0,lines.length);
+//        return linesCopy;
+        return Arrays.copyOf(lines,lines.length);
     }
 
     //Устанавливает набор строк ListBox.
@@ -216,7 +218,7 @@ public class ListBox {
         }
         String prevItem = lines[0];
         for (int i = 0; i < lines.length; i++) {
-            if (!StringOperations.isLess(lines[i], prevItem)) {
+            if (i + 1 < lines.length && !StringOperations.isLess(lines[i + 1], prevItem)) {
                 return false;
             }
             prevItem = lines[i];
@@ -250,35 +252,62 @@ public class ListBox {
     public void resize(double ratio) {
         int newWidtg = (int) (getWidth() * ratio);
         int newHeight = (int) (getHeight() * ratio);
+        newWidtg = newWidtg >=1 ? newWidtg : 1;
+        newHeight = newHeight >=1 ? newHeight : 1;
+        int newParamWidth =  newWidtg - 1;
+        int newParamHeight = newHeight - 1;
+        newParamWidth = ratio != 0 ? newParamWidth : 0;
+        newParamHeight = ratio != 0 ? newParamHeight : 0;
+        bottomRight.setX(topLeft.getX() + newParamWidth);
+        bottomRight.setY(topLeft.getY() + newParamHeight);
     }
 
     //Определяет, лежит ли точка (x, y) внутри ListBox. Если точка лежит на стороне, считается, что она лежит внутри.
     public boolean isInside(int x, int y) {
-        return false;
+        return x >= topLeft.getX() && x <= bottomRight.getX() &&
+                y >= topLeft.getY() && y <= bottomRight.getY();
     }
 
     //Определяет, лежит ли точка point внутри ListBox. Если точка лежит на стороне, считается, что она лежит внутри.
     public boolean isInside(Point point) {
-        return false;
+        return isInside(point.getX(), point.getY());
     }
 
     //Определяет, пересекается  ли ListBox с другим ListBox. Считается, что ListBox’ы пересекаются, если у них
     // есть хоть одна общая точка.
     public boolean isIntersects(ListBox listBox) {
-        return false;
+        return topLeft.getX() <= listBox.bottomRight.getX() && bottomRight.getX() >= listBox.topLeft.getX() &&
+                topLeft.getY() <= listBox.bottomRight.getY() && bottomRight.getY() >= listBox.topLeft.getY();
     }
 
     //Определяет, лежит ли ListBox целиком внутри текущего ListBox.
     public boolean isInside(ListBox listBox) {
-        return false;
+        return listBox.topLeft.getX() >= topLeft.getX() && listBox.bottomRight.getX() <= bottomRight.getX() &&
+                listBox.topLeft.getY() >= topLeft.getY() && listBox.bottomRight.getY() <= bottomRight.getY();
     }
+
+
 
     //Определяет, верно ли, что весь ListBox находится в пределах Desktop.
     public boolean isFullyVisibleOnDesktop(Desktop desktop) {
-        return false;
+        return topLeft.getX() >= 0 && bottomRight.getX() <= desktop.getWidth() &&
+               topLeft.getY() >= 0 && bottomRight.getY() <= desktop.getHeight();
     }
 
     //методы equals и hashCode.
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ListBox)) {
+            return false;
+        }
+        ListBox listBox = (ListBox) obj;
+        return obj instanceof ListBox && listBox.topLeft.getX() == topLeft.getX() &&
+                listBox.topLeft.getY() == topLeft.getY() && listBox.bottomRight.getX() == bottomRight.getX() &&
+                listBox.bottomRight.getY() == bottomRight.getY() && Arrays.equals(listBox.lines, lines);
+    }
 
-
+    @Override
+        public int hashCode() {
+            return super.hashCode();
+        }
 }
