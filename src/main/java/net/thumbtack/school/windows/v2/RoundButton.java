@@ -143,7 +143,7 @@ public class RoundButton {
         RoundButton button = (RoundButton) obj;
         return obj instanceof RoundButton && button.center.getX() == center.getX() &&
                 button.center.getY() == center.getY() &&
-                button.radius == radius;
+                button.radius == radius && button.text == text;
     }
 
     @Override
