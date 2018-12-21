@@ -4,7 +4,7 @@ public class RoundButton {
     //Нажимная круглая кнопка. Для кнопки определено 2 состояния - активна (можно нажать) и пассивна (серого цвета, нажать нельзя).
 
     private Point center;
-    private boolean active = true;
+    private boolean active;
     private int radius;
 
     private String text;

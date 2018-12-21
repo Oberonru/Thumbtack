@@ -100,9 +100,6 @@ public class ListBox {
         if (lines == null) {
             return null;
         }
-//        String[] linesCopy = new String[lines.length];
-//        System.arraycopy(lines,0,linesCopy,0,lines.length);
-//        return linesCopy;
         return Arrays.copyOf(lines,lines.length);
     }
 
@@ -147,12 +144,10 @@ public class ListBox {
         for (int i = 0; i < lines.length; i++) {
             if (line.equals(lines[i])) {
                 return i;
-                //index = i;
-                // break;
             }
         }
         return null;
-        // return index;
+
     }
 
     //Переворачивает массив строк ListBox., то есть делает 0-ю строку - последней, первую - предпоследней и т.д.
