@@ -7,8 +7,10 @@ public interface Movable {
     void moveTo(int x, int y);
 
     //  Передвигает окно так,  так, чтобы его базовая точка (левый верхний угол или центр соответственно)  оказалась в точке point
-    void moveTo(Point point);
-
+    default
+      void moveTo(Point point) {
+       moveTo(point.getX(), point.getY());
+    }
 
     // Передвигает окно на (dx, dy)
     void moveRel(int dx, int dy);

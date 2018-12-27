@@ -56,11 +56,6 @@ public class RoundButton extends RoundWindow {
         getCenter().setY(y);
     }
 
-    //Передвигает RoundButton  так, чтобы центр его оказался в точке point.
-    public void moveTo(Point point) {
-        setCenter(point);
-    }
-
     //Передвигает RoundButton на (dx, dy).
     public void moveRel(int dx, int dy) {
         getCenter().setX(getCenter().getX() + dx);
