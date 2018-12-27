@@ -1,25 +1,26 @@
 package net.thumbtack.school.windows.v3;
 
-public class RoundButton {
-    //Нажимная круглая кнопка. Для кнопки определено 2 состояния - активна (можно нажать) и пассивна (серого цвета, нажать нельзя).
+import net.thumbtack.school.windows.v3.Desktop;
+import net.thumbtack.school.windows.v3.base.RectWindow;
+import net.thumbtack.school.windows.v3.base.RoundWindow;
+import net.thumbtack.school.windows.v3.iface.Movable;
+import net.thumbtack.school.windows.v3.iface.Resizable;
 
-    private Point center;
-    private boolean active;
-    private int radius;
+public class RoundButton extends RoundWindow {
+    //Нажимная круглая кнопка. Для кнопки определено 2 состояния - активна (можно нажать) и пассивна (серого цвета, нажать нельзя).
 
     private String text;
 
     //Создает RoundButton по координатам центра, значению радиуса и флагу активности.
     public RoundButton(Point center, int radius, boolean active, String text) {
-        this.center = center;
-        this.radius = radius;
-        this.active = active;
+        this.setCenter(center);
+        this.setRadius(radius);
+        this.setActive(active);
         this.text = text;
     }
 
     public RoundButton(Point center, int radius, boolean active) {
         this(center, radius, active, null);
-
     }
 
     //Создает RoundButton по координатам центра, значению радиуса и флагу активности.
@@ -49,81 +50,44 @@ public class RoundButton {
         this(xCenter, yCenter, radius, true);
     }
 
-    //Возвращает центр RoundButton.
-    public Point getCenter() {
-        return center;
-    }
-
-    //Возвращает радиус RoundButton.
-    public int getRadius() {
-        return radius;
-    }
-
-    //Возвращает true, если кнопка активна, иначе false.
-    public boolean isActive() {
-        return active;
-    }
-
     //Передвигает RoundButton  так, чтобы центр его оказался в точке  (x, y).
     public void moveTo(int x, int y) {
-        center.setX(x);
-        center.setY(y);
+        getCenter().setX(x);
+        getCenter().setY(y);
     }
 
     //Передвигает RoundButton  так, чтобы центр его оказался в точке point.
     public void moveTo(Point point) {
-        center = point;
-    }
-
-    //Устанавливает центр RoundButton.
-    public void setCenter(int x, int y) {
-        center.setX(x);
-        center.setY(y);
-    }
-
-    //Устанавливает радиус RoundButton.
-    public void setRadius(int radius) {
-        this.radius = radius;
-    }
-
-    //Устанавливает состояние активности RoundButton.
-    public void setActive(boolean active) {
-        this.active = active;
+        setCenter(point);
     }
 
     //Передвигает RoundButton на (dx, dy).
     public void moveRel(int dx, int dy) {
-        center.setX(center.getX() + dx);
-        center.setY(center.getY() + dy);
+        getCenter().setX(getCenter().getX() + dx);
+        getCenter().setY(getCenter().getY() + dy);
     }
+    //Устанавливает радиус RoundButton.
 
-    //Изменяет радиус RoundButton в ratio раз, не изменяя центра.
-    // Дробная часть вычисленного таким образом радиуса отбрасывается.
-    // Если вычисленный радиус окажется меньше 1, то он принимается равным 1.
-    public void resize(double ratio) {
-        radius = (int) Math.ceil(radius * ratio);
-    }
 
-    //Определяет, лежит ли точка (x, y) внутри RoundButton.
-    // Если точка лежит на окружности, считается, что она лежит внутри.
-    // В этом методе мы пренебрегаем пиксельной структурой изображения и рассматриваем RoundButton как математический круг.
     public boolean isInside(int x, int y) {
-        double distance = Math.sqrt(Math.pow(x - center.getX(), 2) + Math.pow(y - center.getY(), 2));
-        return radius >= distance;
-
+        double distance = Math.sqrt(Math.pow(x - getCenter().getX(), 2) + Math.pow(y - getCenter().getY(), 2));
+        return getRadius() >= distance;
     }
-
     //Определяет, лежит ли точка point внутри RoundButton.
     // Если точка лежит на окружности, считается, что она лежит внутри.
     // В этом методе мы пренебрегаем пиксельной структурой изображения и рассматриваем RoundButton как математический круг.
     public boolean isInside(Point point) {
-        return radius >= Math.sqrt(Math.pow(point.getX() - center.getX(), 2) + Math.pow(point.getY() - center.getY(), 2));
+        return getRadius() >= Math.sqrt(Math.pow(point.getX() - getCenter().getX(), 2) + Math.pow(point.getY() - getCenter().getY(), 2));
     }
-
-    //Определяет, верно ли, что вся RoundButton находится в пределах Desktop.
     public boolean isFullyVisibleOnDesktop(Desktop desktop) {
-        return center.getX() + radius < desktop.getWidth() && center.getX() - radius >= 0
-                && center.getY() + radius < desktop.getHeight() && center.getY() - radius >= 0;
+        return getCenter().getX() + getRadius() < desktop.getWidth() && getCenter().getX() - getRadius() >= 0
+                && getCenter().getY() + getRadius() < desktop.getHeight() && getCenter().getY() - getRadius() >= 0;
+    }
+    //Изменяет радиус RoundButton в ratio раз, не изменяя центра.
+    // Дробная часть вычисленного таким образом радиуса отбрасывается.
+    // Если вычисленный радиус окажется меньше 1, то он принимается равным 1.
+    public void resize(double ratio) {
+        setRadius((int) Math.ceil(getRadius() * ratio));
     }
 
     public String getText() {
@@ -133,7 +97,6 @@ public class RoundButton {
     public void setText(String text) {
         this.text = text;
     }
-
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof RoundButton)) {
@@ -141,13 +104,15 @@ public class RoundButton {
         }
 
         RoundButton button = (RoundButton) obj;
-        return obj instanceof RoundButton && button.center.getX() == center.getX() &&
-                button.center.getY() == center.getY() &&
-                button.radius == radius && button.text == text;
+        return obj instanceof RoundButton && button.getCenter().getX() == getCenter().getX() &&
+                button.getCenter().getY() == getCenter().getY() &&
+                button.getRadius() == getRadius() && button.text == text;
     }
 
     @Override
     public int hashCode() {
         return super.hashCode();
     }
+
+
 }

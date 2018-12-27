@@ -1,6 +1,8 @@
 package net.thumbtack.school.windows.v3;
 
-public class Point {
+import net.thumbtack.school.windows.v3.iface.Movable;
+
+public class Point  {
     //Точка на экране.
     private  int x,y;
     //Создает Point с заданными координатам

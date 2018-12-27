@@ -1,12 +1,13 @@
 package net.thumbtack.school.windows.v3;
 
-public class RectButton {
+import net.thumbtack.school.windows.v3.Desktop;
+import net.thumbtack.school.windows.v3.base.RectWindow;
+import net.thumbtack.school.windows.v3.iface.Movable;
+
+public class RectButton extends RectWindow implements Movable {
     //Нажимная прямоугольная кнопка. Для кнопки определено 2 состояния - активна (можно нажать) и пассивна (серого
     // цвета, нажать нельзя). Предполагается, что всегда будут передаваться допустимые координаты, то есть при создании
     // или изменении всегда будет выполняться : левая точка не правее правой, верхняя точка не ниже нижней.
-    private Point topLeft;
-    private Point bottomRight;
-    boolean active = true;
 
     private String text;
 
@@ -15,92 +16,53 @@ public class RectButton {
     // то будет создана кнопка ширины и высоты 1.
     public RectButton(Point topLeft, Point bottomRight, boolean active, String text) {
         this(topLeft, bottomRight, text);
-        this.active = active;
+        setActive(active);
     }
 
     public RectButton(Point topLeft, Point bottomRight, boolean active) {
         this(topLeft, bottomRight);
-        this.active = active;
+        setActive(active);
     }
 
     //Создает RectButton по координатам левого верхнего угла, ширине, высоте и флагу активности.
     public RectButton(int xLeft, int yTop, int width, int height, boolean active, String text) {
         this(xLeft, yTop, width, height, text);
-        this.active = active;
+        setActive(active);
     }
 
     public RectButton(int xLeft, int yTop, int width, int height, boolean active) {
         this(xLeft, yTop, width, height);
-        this.active = active;
+        setActive(active);
     }
 
     //Создает активную RectButton по координатам углов - левого верхнего и правого нижнего.
     public RectButton(Point topLeft, Point bottomRight, String text) {
-        this.topLeft = topLeft;
-        this.bottomRight = bottomRight;
+        this(topLeft, bottomRight, true);
         this.text = text;
     }
+
     public RectButton(Point topLeft, Point bottomRight) {
-        this.topLeft = topLeft;
-        this.bottomRight = bottomRight;
+        setTopLeft(topLeft);
+        setBottomRight(bottomRight);
     }
 
     //Создает активную RectButton по координатам левого верхнего угла, ширине и высоте.
     public RectButton(int xLeft, int yTop, int width, int height, String text) {
         this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), text);
     }
+
     public RectButton(int xLeft, int yTop, int width, int height) {
         this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1));
-    }
-
-    //Возвращает левую верхнюю точку RectButton.
-    public Point getTopLeft() {
-        return topLeft;
-    }
-
-    //Возвращает правую нижнюю точку RectButton.
-    public Point getBottomRight() {
-        return bottomRight;
-    }
-
-    //Возвращает true, если кнопка активна, иначе false.
-    public boolean isActive() {
-        return active;
-    }
-
-    //Устанавливает левую верхнюю точку RectButton.
-    public void setTopLeft(Point topLeft) {
-        this.topLeft = topLeft;
-    }
-
-    //Устанавливает правую нижнюю точку RectButton.
-    public void setBottomRight(Point bottomRight) {
-        this.bottomRight = bottomRight;
-    }
-
-    //Устанавливает состояние активности RectButton.
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    //Возвращает ширину RectButton.
-    public int getWidth() {
-        return Math.abs(bottomRight.getX() - topLeft.getX() + 1);
-    }
-
-    //Возвращает высоту RectButton.
-    public int getHeight() {
-        return Math.abs(bottomRight.getY() - topLeft.getY() + 1);
     }
 
     //Передвигает RectButton так, чтобы левый верхний угол его оказался в точке (x, y).
     public void moveTo(int x, int y) {
         int originWidth = getWidth();
         int originHeight = getHeight();
-        topLeft.setX(x);
-        topLeft.setY(y);
-        bottomRight.setX(topLeft.getX() + originWidth - 1);
-        bottomRight.setY(topLeft.getY() + originHeight - 1);
+        getTopLeft().setX(x);
+        getTopLeft().setY(y);
+        getBottomRight().setX(getTopLeft().getX() + originWidth - 1);
+        getBottomRight().setY(getTopLeft().getY() + originHeight - 1);
     }
 
     //Передвигает RectButton  так, чтобы левый верхний угол его оказался в точке point.
@@ -110,7 +72,7 @@ public class RectButton {
 
     //Передвигает RectButton на (dx, dy).
     public void moveRel(int dx, int dy) {
-        moveTo(topLeft.getX() + dx, topLeft.getY() + dy);
+        moveTo(getTopLeft().getX() + dx, getTopLeft().getY() + dy);
     }
 
     //Изменяет ширину и длину RectButton в ratio раз при сохранении координат левой верхней точки.
@@ -121,39 +83,28 @@ public class RectButton {
         int newHeight = (int) (getHeight() * ratio);
         newWidth = newWidth >= 1 ? newWidth : 1;
         newHeight = newHeight >= 1 ? newHeight : 1;
-        bottomRight.setX(topLeft.getX() + newWidth - 1);
-        bottomRight.setY(topLeft.getY() + newHeight - 1);
-    }
-
-    //Определяет, лежит ли точка (x, y) внутри RectButton. Если точка лежит на стороне, считается, что она лежит внутри.
-    public boolean isInside(int x, int y) {
-        return x >= topLeft.getX() && x <= bottomRight.getX()
-                && y >= topLeft.getY() && y <= bottomRight.getY();
-    }
-
-    //Определяет, лежит ли точка point внутри RectButton. Если точка лежит на стороне, считается, что она лежит внутри.
-    public boolean isInside(Point point) {
-        return isInside(point.getX(), point.getY());
+        getBottomRight().setX(getTopLeft().getX() + newWidth - 1);
+        getBottomRight().setY(getTopLeft().getY() + newHeight - 1);
     }
 
     //Определяет, пересекается  ли RectButton с другим RectButton. Считается, что кнопки пересекаются, если у них есть
     // хоть одна общая точка.
     public boolean isIntersects(RectButton rectButton) {
-        return topLeft.getX() <= rectButton.bottomRight.getX() && bottomRight.getX() >= rectButton.topLeft.getX() &&
-                topLeft.getY() <= rectButton.bottomRight.getY() && bottomRight.getY() >= rectButton.topLeft.getY();
+        return getTopLeft().getX() <= rectButton.getBottomRight().getX() && getBottomRight().getX() >= rectButton.getTopLeft().getX() &&
+                getTopLeft().getY() <= rectButton.getBottomRight().getY() && getBottomRight().getY() >= rectButton.getTopLeft().getY();
     }
 
     //Определяет, лежит ли RectButton целиком внутри текущего RectButton.
     public boolean isInside(RectButton rectButton) {
-        return rectButton.topLeft.getX() >= topLeft.getX() && rectButton.bottomRight.getX() <= bottomRight.getX() &&
-                rectButton.topLeft.getY() >= topLeft.getY() && rectButton.bottomRight.getY() <= bottomRight.getY();
+        return rectButton.getTopLeft().getX() >= getTopLeft().getX() && rectButton.getBottomRight().getX() <= getBottomRight().getX() &&
+                rectButton.getTopLeft().getY() >= getTopLeft().getY() && rectButton.getBottomRight().getY() <= getBottomRight().getY();
     }
 
-    //Определяет, верно ли, что вся RectButton находится в пределах Desktop.
     public boolean isFullyVisibleOnDesktop(Desktop desktop) {
-        return topLeft.getX() >= 0 && topLeft.getX() <= desktop.getWidth() &&
-                bottomRight.getY() >= 0 && bottomRight.getY() <= desktop.getHeight();
+        return getTopLeft().getX() >= 0 && getTopLeft().getX() <= desktop.getWidth() &&
+                getBottomRight().getY() >= 0 && getBottomRight().getY() <= desktop.getHeight();
     }
+
 
     public String getText() {
         return text;
@@ -171,7 +122,7 @@ public class RectButton {
         }
         RectButton button = (RectButton) obj;
         return button.getTopLeft().getX() == getTopLeft().getX() && button.getTopLeft().getY() == getTopLeft().getY() &&
-                 button.getBottomRight().getX() == getBottomRight().getX() && button.getBottomRight().getY() == getBottomRight().getY();
+                button.getBottomRight().getX() == getBottomRight().getX() && button.getBottomRight().getY() == getBottomRight().getY();
     }
 
     @Override

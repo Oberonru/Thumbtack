@@ -1,12 +1,16 @@
 package net.thumbtack.school.windows.v3;
 
 import net.thumbtack.school.base.StringOperations;
+import net.thumbtack.school.windows.v3.base.RectWindow;
+import net.thumbtack.school.windows.v3.iface.Movable;
+import net.thumbtack.school.windows.v3.iface.Resizable;
+
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ListBox {
+public class ListBox extends RectWindow implements Movable, Resizable {
     /**
      * Прямоугольное окно,  содержащее в себе список строк. Для ListBox определено 2 состояния - активен (изображается
      * черным цветом) и пассивен (серым цветом). Предполагается, что всегда будут передаваться допустимые координаты, то
@@ -19,10 +23,6 @@ public class ListBox {
      * на те же строки.
      */
 
-
-    private Point topLeft;
-    private Point bottomRight;
-    private boolean active = true;
     private String[] lines;
 
 
@@ -30,8 +30,10 @@ public class ListBox {
     // Обращаем внимание на то, что обе точки входят в ListBox, так что если создать ListBox с topLeft.equals(bottomRight),
     // то будет создан ListBox ширины и высоты 1. Параметр lines может быть null.
     public ListBox(Point topLeft, Point bottomRight, boolean active, String[] lines) {
-        this(topLeft, bottomRight, lines);
-        this.active = active;
+        setTopLeft(topLeft);
+        setBottomRight(bottomRight);
+        this.lines = lines != null ? lines.clone() : null;
+        setActive(active);
     }
 
     //Создает ListBox по координатам левого верхнего угла, ширине, высоте, флагу активности и набору строк.
@@ -43,55 +45,13 @@ public class ListBox {
     //Создает активный ListBox по координатам углов - левого верхнего и правого нижнего и набору строк.
     // Параметр lines может быть null.
     public ListBox(Point topLeft, Point bottomRight, String[] lines) {
-        this.topLeft = topLeft;
-        this.bottomRight = bottomRight;
-        this.lines = lines != null ? lines.clone() : null;
+        this(topLeft, bottomRight, true, lines);
     }
 
     //Создает активный ListBox по координатам левого верхнего угла, ширине и высоте и набору строк.
     // Параметр lines может быть null.
     public ListBox(int xLeft, int yTop, int width, int height, String[] lines) {
         this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), lines);
-    }
-
-    //Возвращает левую верхнюю точку ListBox.
-    public Point getTopLeft() {
-        return topLeft;
-    }
-
-    //Возвращает правую нижнюю точку ListBox.
-    public Point getBottomRight() {
-        return bottomRight;
-    }
-
-    //Возвращает true, если ListBox активен, иначе false
-    public boolean isActive() {
-        return active;
-    }
-
-    //	Устанавливает левую верхнюю точку ListBox.
-    public void setTopLeft(Point topLeft) {
-        this.topLeft = topLeft;
-    }
-
-    //Устанавливает правую нижнюю точку ListBox.
-    public void setBottomRight(Point bottomRight) {
-        this.bottomRight = bottomRight;
-    }
-
-    //Устанавливает состояние активности ListBox.
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    //Возвращает ширину ListBox.
-    public int getWidth() {
-        return Math.abs(bottomRight.getX() - topLeft.getX()) + 1;
-    }
-
-    //Возвращает высоту ListBox.
-    public int getHeight() {
-        return Math.abs(bottomRight.getY() - topLeft.getY()) + 1;
     }
 
     //Возвращает копию набора строк ListBox.
@@ -224,10 +184,10 @@ public class ListBox {
     public void moveTo(int x, int y) {
         int originWidth = getWidth();
         int originHeight = getHeight();
-        topLeft.setX(x);
-        topLeft.setY(y);
-        bottomRight.setX(topLeft.getX() + originWidth - 1);
-        bottomRight.setY(topLeft.getY() + originHeight - 1);
+        getTopLeft().setX(x);
+        getTopLeft().setY(y);
+        getBottomRight().setX(getTopLeft().getX() + originWidth - 1);
+        getBottomRight().setY(getTopLeft().getY() + originHeight - 1);
     }
 
     //Передвигает ListBox  так, чтобы левый верхний угол его оказался в точке point.
@@ -237,7 +197,7 @@ public class ListBox {
 
     //Передвигает ListBox на (dx, dy).
     public void moveRel(int dx, int dy) {
-        moveTo(topLeft.getX() + dx, topLeft.getY() + dy);
+        moveTo(getTopLeft().getX() + dx, getTopLeft().getY() + dy);
     }
 
     //Изменяет ширину и длину ListBox в ratio раз при сохранении координат левой верхней точки. Дробная часть
@@ -252,40 +212,21 @@ public class ListBox {
         int newParamHeight = newHeight - 1;
         newParamWidth = ratio != 0 ? newParamWidth : 0;
         newParamHeight = ratio != 0 ? newParamHeight : 0;
-        bottomRight.setX(topLeft.getX() + newParamWidth);
-        bottomRight.setY(topLeft.getY() + newParamHeight);
-    }
-
-    //Определяет, лежит ли точка (x, y) внутри ListBox. Если точка лежит на стороне, считается, что она лежит внутри.
-    public boolean isInside(int x, int y) {
-        return x >= topLeft.getX() && x <= bottomRight.getX() &&
-                y >= topLeft.getY() && y <= bottomRight.getY();
-    }
-
-    //Определяет, лежит ли точка point внутри ListBox. Если точка лежит на стороне, считается, что она лежит внутри.
-    public boolean isInside(Point point) {
-        return isInside(point.getX(), point.getY());
+        getBottomRight().setX(getTopLeft().getX() + newParamWidth);
+        getBottomRight().setY(getTopLeft().getY() + newParamHeight);
     }
 
     //Определяет, пересекается  ли ListBox с другим ListBox. Считается, что ListBox’ы пересекаются, если у них
     // есть хоть одна общая точка.
     public boolean isIntersects(ListBox listBox) {
-        return topLeft.getX() <= listBox.bottomRight.getX() && bottomRight.getX() >= listBox.topLeft.getX() &&
-                topLeft.getY() <= listBox.bottomRight.getY() && bottomRight.getY() >= listBox.topLeft.getY();
+        return getTopLeft().getX() <= listBox.getBottomRight().getX() && getBottomRight().getX() >= listBox.getTopLeft().getX() &&
+                getTopLeft().getY() <= listBox.getBottomRight().getY() && getBottomRight().getY() >= listBox.getTopLeft().getY();
     }
 
     //Определяет, лежит ли ListBox целиком внутри текущего ListBox.
     public boolean isInside(ListBox listBox) {
-        return listBox.topLeft.getX() >= topLeft.getX() && listBox.bottomRight.getX() <= bottomRight.getX() &&
-                listBox.topLeft.getY() >= topLeft.getY() && listBox.bottomRight.getY() <= bottomRight.getY();
-    }
-
-
-
-    //Определяет, верно ли, что весь ListBox находится в пределах Desktop.
-    public boolean isFullyVisibleOnDesktop(Desktop desktop) {
-        return topLeft.getX() >= 0 && bottomRight.getX() <= desktop.getWidth() &&
-               topLeft.getY() >= 0 && bottomRight.getY() <= desktop.getHeight();
+        return listBox.getTopLeft().getX() >= getTopLeft().getX() && listBox.getBottomRight().getX() <= getBottomRight().getX() &&
+                listBox.getTopLeft().getY() >= getTopLeft().getY() && listBox.getBottomRight().getY() <= getBottomRight().getY();
     }
 
     //методы equals и hashCode.
@@ -295,9 +236,9 @@ public class ListBox {
             return false;
         }
         ListBox listBox = (ListBox) obj;
-        return obj instanceof ListBox && listBox.topLeft.getX() == topLeft.getX() &&
-                listBox.topLeft.getY() == topLeft.getY() && listBox.bottomRight.getX() == bottomRight.getX() &&
-                listBox.bottomRight.getY() == bottomRight.getY() && Arrays.equals(listBox.lines, lines);
+        return obj instanceof ListBox && listBox.getTopLeft().getX() == getTopLeft().getX() &&
+                listBox.getTopLeft().getY() == getTopLeft().getY() && listBox.getBottomRight().getX() == getBottomRight().getX() &&
+                listBox.getBottomRight().getY() == getBottomRight().getY() && Arrays.equals(listBox.lines, lines);
     }
 
     @Override
