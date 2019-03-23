@@ -2,7 +2,8 @@ package net.thumbtack.school.windows.v4;
 
 public class Desktop {
     private int width, height;
-
+    private static final int WIDTH = 640;
+    private final static int HEIGHT = 480;
     //Экран компьютера. Координаты отсчитываются от левой верхней точки.
     //Создает Desktop по значениям ширины и высоты.
     public Desktop(int width, int height) {
@@ -12,7 +13,7 @@ public class Desktop {
 
     //Создает классический VGA Desktop с размерами 640*480
     public Desktop() {
-        this(640, 480);
+        this(WIDTH, HEIGHT);
     }
 
     //Возвращает ширину экрана

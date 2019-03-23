@@ -36,7 +36,7 @@ public class RadioButton extends RoundButton {
     }
 
     //Создает активную RadioButton по координатам центра, значению радиуса, тексту и состоянию.
-    public RadioButton(Point center, int radius, String text, boolean checked) {
+    public RadioButton(Point center, int radius, String text, boolean checked) throws WindowException {
         super(center, radius, text);
         this.checked = checked;
     }

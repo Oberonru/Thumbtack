@@ -24,12 +24,12 @@ public class WindowFactory {
     }
 
     //Создает RoundButton по координатам центра, значению рад//иуса и флагу активности.
-    public static RoundButton createRoundButton(Point center, int radius, WindowState state) {
+    public static RoundButton createRoundButton(Point center, int radius, WindowState state) throws WindowException {
         return createRoundButton(center, radius, state, null);
     }
 
     //Создает RoundButton по координатам центра, значению рад//иуса и флагу активности.
-    public static RoundButton createRoundButton(Point center, int radius, WindowState state, String text) {
+    public static RoundButton createRoundButton(Point center, int radius, WindowState state, String text) throws WindowException {
         RoundBottonCount++;
         return new RoundButton(center, radius, state, text);
     }

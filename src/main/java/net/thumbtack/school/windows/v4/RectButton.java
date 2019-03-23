@@ -1,6 +1,7 @@
 package net.thumbtack.school.windows.v4;
 
 import net.thumbtack.school.windows.v4.base.RectWindow;
+import net.thumbtack.school.windows.v4.base.WindowErrorCode;
 import net.thumbtack.school.windows.v4.base.WindowException;
 import net.thumbtack.school.windows.v4.base.WindowState;
 import net.thumbtack.school.windows.v4.iface.Movable;

@@ -19,8 +19,8 @@ public enum WindowState {
         if (stateString == WindowState.ACTIVE.toString()) {
             return ACTIVE;
         }
-        if (stateString ==  WindowState.INACTIVE.toString()) {
-            return WindowState.INACTIVE;
+        if (stateString == WindowState.INACTIVE.toString()) {
+            return INACTIVE;
         }
         if (stateString == WindowState.DESTROYED.toString()) {
             return DESTROYED;

@@ -10,7 +10,7 @@ public class RoundButton extends RoundWindow {
     private String text;
 
     //Создает RoundButton по координатам центра, значению радиуса и флагу активности.
-    public RoundButton(Point center, int radius, WindowState state, String text) {
+    public RoundButton(Point center, int radius, WindowState state, String text) throws WindowException {
         this.setCenter(center);
         this.setRadius(radius);
         this.setState(state);
@@ -39,7 +39,7 @@ public class RoundButton extends RoundWindow {
     }
 
     //Создает активную RoundButton по координатам центра и значению радиуса.
-    public RoundButton(Point center, int radius, String text) {
+    public RoundButton(Point center, int radius, String text) throws WindowException {
         this(center, radius, WindowState.ACTIVE, text);
     }
 

@@ -1,12 +1,11 @@
 package net.thumbtack.school.windows.v4;
 
 import net.thumbtack.school.base.StringOperations;
-import net.thumbtack.school.windows.v4.base.RectWindow;
-import net.thumbtack.school.windows.v4.base.WindowException;
-import net.thumbtack.school.windows.v4.base.WindowState;
+import net.thumbtack.school.windows.v4.base.*;
 import net.thumbtack.school.windows.v4.iface.Movable;
 import net.thumbtack.school.windows.v4.iface.Resizable;
 
+import javax.xml.ws.WebServiceException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -31,9 +30,12 @@ public class ListBox extends RectWindow implements Movable, Resizable {
     // Обращаем внимание на то, что обе точки входят в ListBox, так что если создать ListBox с topLeft.equals(bottomRight),
     // то будет создан ListBox ширины и высоты 1. Параметр lines может быть null.
     public ListBox(Point topLeft, Point bottomRight, WindowState state, String[] lines) throws WindowException {
+        if (state == WindowState.DESTROYED) {
+            throw new WindowException(WindowErrorCode.WRONG_STATE);
+        }
         setTopLeft(topLeft);
         setBottomRight(bottomRight);
-        this.lines = lines != null ? lines.clone() : null;
+        setLines(lines);
         setState(state);
     }
 
@@ -65,49 +67,69 @@ public class ListBox extends RectWindow implements Movable, Resizable {
         this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), lines);
     }
 
-    //Возвращает копию набора строк ListBox.
-    public String[] getLines() {
+    public String[] getLines() throws WindowException {
         if (lines == null) {
             return null;
+        }
+        if (lines.length == 0) {
+            throw new WindowException(WindowErrorCode.EMPTY_ARRAY);
         }
         return Arrays.copyOf(lines, lines.length);
     }
 
     //Устанавливает набор строк ListBox.
     public void setLines(String[] lines) {
-        this.lines = lines;
+        this.lines = lines != null ? lines.clone() : null;
     }
 
     //Возвращает набор строк ListBox, начиная со строки “from” и до строки (“to”-1) включительно . Если в ListBox строк
     // меньше, чем “to”, возвращает строки от “from” и до конца. Гарантируется, что “from” < “to”. Если массив строк
     // равен null, возвращает null.
-    public String[] getLinesSlice(int from, int to) throws WindowException{
-        if (lines == null || from >= lines.length) {
-            return null;
+
+    /**
+     * Возвращает набор строк ListBox, начиная со строки “from” и до строки (“to”- 1) включительно. Если массив строк
+     * равен null, выбрасывается исключение WindowException с кодом ошибки EMPTY_ARRAY. Если “from” < 0 или в ListBox
+     * строк меньше, чем “to” , или “from” > (“to” - 1), выбрасывается исключение WindowException с кодом ошибки WRONG_INDEX.
+     */
+    public String[] getLinesSlice(int from, int to) throws WindowException {
+        if (lines == null) {
+            throw new WindowException(WindowErrorCode.EMPTY_ARRAY);
+        }
+        if (from < 0 || from > to - 1 || lines.length < to) {
+            throw new WindowException(WindowErrorCode.WRONG_INDEX);
         }
         to = to <= lines.length ? to : lines.length;
         return Arrays.copyOfRange(lines, from, to);
     }
 
-    // Возвращает строку с номером index. Если строки с таким номером нет или массив строк равен null, возвращает null.
-    public String getLine(int index) throws WindowException{
-        if (lines.length > index) {
-            return lines[index];
+    // Возвращает строку с номером index. Если массив строк равен null, выбрасывается исключение WindowException с кодом
+    // ошибки EMPTY_ARRAY. Если строки с таким номером нет, выбрасывается исключение WindowException с кодом ошибки WRONG_INDEX. .
+    public String getLine(int index) throws WindowException {
+        if (lines == null || lines.length == 0) {
+            throw new WindowException(WindowErrorCode.EMPTY_ARRAY);
         }
-        return null;
+        if (lines.length <= index || index < 0) {
+            throw new WindowException(WindowErrorCode.WRONG_INDEX);
+        }
+        return lines[index];
     }
 
-    //Заменяет строку с номером index. Если строки с таким номером нет или массив строк равен null, ничего не делает.
+    //Заменяет строку с номером index. Если массив строк равен null, выбрасывается исключение WindowException с кодом
+    //ошибки EMPTY_ARRAY. Если строки с таким номером нет, выбрасывается исключение WindowException с кодом ошибки WRONG_INDEX.
     public void setLine(int index, String line) throws WindowException {
-        if (lines.length > index) {
-            lines[index] = line;
+        if (lines == null || lines.length == 0) {
+            throw new WindowException(WindowErrorCode.EMPTY_ARRAY);
         }
+        if (index < 0 || lines.length <= index) {
+            throw new WindowException(WindowErrorCode.WRONG_INDEX);
+        }
+        lines[index] = line;
     }
 
     //Ищет  первую совпадающую с line строку в массиве строк ListBox. Если строка найдена, возвращает ее индекс,
     // в противном случае возвращает null.
     public Integer findLine(String line) {
-        //Integer index = null;
+        //Integer index = null;lines[index]
         if (lines == null) {
             return null;
         }
