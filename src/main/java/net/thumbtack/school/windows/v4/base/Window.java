@@ -9,23 +9,21 @@ public abstract class Window implements Movable, Resizable {
     //устаналивает вместо active состояние кнопки(enum)
     private WindowState state;
 
-    public void setState(WindowState state) throws WindowException {
-        if (state == null || this.state == WindowState.DESTROYED) {
+    public void setState(WindowState newState) throws WindowException {
+        if (newState == null
+                || state == null && newState == WindowState.DESTROYED
+                || state == WindowState.DESTROYED ) {
             throw new WindowException(WindowErrorCode.WRONG_STATE);
         }
-        this.state = state;
+        state = newState;
     }
 
     public void setState(String stateString) throws WindowException {
-        if (stateString == "DESTROYED") {
-            throw new WindowException(WindowErrorCode.WRONG_STATE);
-        }
         WindowState state = WindowState.fromString(stateString);
         setState(state);
     }
 
     public WindowState getState() {
-
         return state;
     }
 

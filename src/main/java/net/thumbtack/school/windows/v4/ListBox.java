@@ -30,9 +30,6 @@ public class ListBox extends RectWindow implements Movable, Resizable {
     // Обращаем внимание на то, что обе точки входят в ListBox, так что если создать ListBox с topLeft.equals(bottomRight),
     // то будет создан ListBox ширины и высоты 1. Параметр lines может быть null.
     public ListBox(Point topLeft, Point bottomRight, WindowState state, String[] lines) throws WindowException {
-        if (state == WindowState.DESTROYED) {
-            throw new WindowException(WindowErrorCode.WRONG_STATE);
-        }
         setTopLeft(topLeft);
         setBottomRight(bottomRight);
         setLines(lines);
@@ -40,7 +37,9 @@ public class ListBox extends RectWindow implements Movable, Resizable {
     }
 
     public ListBox(Point topLeft, Point bottomRight, String state, String[] lines) throws WindowException {
-        this(topLeft, bottomRight, lines);
+        setTopLeft(topLeft);
+        setBottomRight(bottomRight);
+        setLines(lines);
         setState(state);
     }
 
@@ -51,8 +50,7 @@ public class ListBox extends RectWindow implements Movable, Resizable {
     }
 
     public ListBox(int xLeft, int yTop, int width, int height, String state, String[] lines) throws WindowException {
-        this(xLeft, yTop, width, height, lines);
-        setState(state);
+        this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), state, lines);
     }
 
     //Создает активный ListBox по координатам углов - левого верхнего и правого нижнего и набору строк.
