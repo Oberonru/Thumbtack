@@ -17,51 +17,49 @@ public class RectButton extends RectWindow implements Movable {
     // Обращаем внимание на то, что обе точки входят в кнопку, так что если создать кнопку с topLeft.equals(bottomRight),
     // то будет создана кнопка ширины и высоты 1.
     public RectButton(Point topLeft, Point bottomRight, WindowState state, String text) throws WindowException {
-        this(topLeft, bottomRight, text);
+        this.text = text;
+        setTopLeft(topLeft);
+        setBottomRight(bottomRight);
         setState(state);
     }
     public RectButton(Point topLeft, Point bottomRight, String state, String text) throws WindowException {
-        this(topLeft, bottomRight, text);
+        this.text = text;
+        setTopLeft(topLeft);
+        setBottomRight(bottomRight);
         setState(state);
     }
 
     public RectButton(Point topLeft, Point bottomRight, WindowState state)  throws WindowException {
-        this(topLeft, bottomRight);
-        setState(state);
+        this(topLeft, bottomRight, state, null);
     }
 
     //Создает RectButton по координатам левого верхнего угла, ширине, высоте и флагу активности.
     public RectButton(int xLeft, int yTop, int width, int height, WindowState state, String text) throws WindowException {
-        this(xLeft, yTop, width, height, text);
-        setState(state);
+        this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), state, text);
     }
     public RectButton(int xLeft, int yTop, int width, int height, String state, String text) throws WindowException {
-        this(xLeft, yTop, width, height, text);
-        setState(state);
+        this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), state, text);
     }
 
     public RectButton(int xLeft, int yTop, int width, int height, WindowState state)  throws WindowException {
-        this(xLeft, yTop, width, height);
-        setState(state);
+        this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), state, null);
     }
 
     //Создает активную RectButton по координатам углов - левого верхнего и правого нижнего.
     public RectButton(Point topLeft, Point bottomRight, String text) throws WindowException {
-        this(topLeft, bottomRight, WindowState.ACTIVE);
-        this.text = text;
+        this(topLeft, bottomRight, WindowState.ACTIVE, text);
     }
 
-    public RectButton(Point topLeft, Point bottomRight) {
-        setTopLeft(topLeft);
-        setBottomRight(bottomRight);
+    public RectButton(Point topLeft, Point bottomRight) throws WindowException {
+        this(topLeft, bottomRight, WindowState.ACTIVE, null);
     }
 
     //Создает активную RectButton по координатам левого верхнего угла, ширине и высоте.
-    public RectButton(int xLeft, int yTop, int width, int height, String text) throws  WindowException{
+    public RectButton(int xLeft, int yTop, int width, int height, String text) throws WindowException{
         this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), text);
     }
 
-    public RectButton(int xLeft, int yTop, int width, int height) {
+    public RectButton(int xLeft, int yTop, int width, int height) throws WindowException {
         this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1));
     }
 
