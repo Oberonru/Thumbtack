@@ -51,7 +51,7 @@ public class RoundButton extends RoundWindow {
 
     //Создает активную RoundButton по координатам центра и значению радиуса.
     public RoundButton(int xCenter, int yCenter, int radius, String text) throws WindowException {
-        this(xCenter, yCenter, radius, (WindowState) null, text);
+        this(xCenter, yCenter, radius, WindowState.ACTIVE, text);
     }
 
     public RoundButton(int xCenter, int yCenter, int radius) throws WindowException {

@@ -56,13 +56,13 @@ public class ComboBox extends ListBox {
     //    Создает активный ComboBox по координатам углов - левого верхнего и правого нижнего, набору строк и номеру
     // выделенной строки. Если выделенной строки нет, в качестве “selected” передается null. Параметр lines может быть null.
     public ComboBox(Point topLeft, Point bottomRight, String[] lines, Integer selected) throws WindowException {
-        this(topLeft, bottomRight, (String) null, lines, selected);
+        this(topLeft, bottomRight, WindowState.ACTIVE, lines, selected);
     }
 
     //    Создает активный ComboBox по координатам левого верхнего угла, ширине, высоте, набору строк и номеру
     // выделенной строки. Если выделенной строки нет, в качестве “selected” передается null. Параметр lines может быть null.
     public ComboBox(int xLeft, int yTop, int width, int height, String[] lines, Integer selected) throws WindowException {
-        this(xLeft, yTop, width, height,(String) null, lines, selected);
+        this(xLeft, yTop, width, height,WindowState.ACTIVE, lines, selected);
     }
 
     // Возвращает номер выбранной строки ComboBox.

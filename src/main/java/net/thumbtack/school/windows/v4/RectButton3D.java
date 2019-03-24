@@ -17,21 +17,18 @@ public class RectButton3D extends RectButton {
     }
 
     public RectButton3D(Point topLeft, Point bottomRight, String state, String text, int zHeight) throws WindowException {
-        super(topLeft, bottomRight, text);
+        super(topLeft, bottomRight, state, text);
         this.zHeight = zHeight;
-        setState(state);
     }
 
     //Создает RectButton3D по координатам левого верхнего угла, ширине, высоте, строке на кнопке text, высоте zHeight
     // и флагу активности.
     public RectButton3D(int xLeft, int yTop, int width, int height, WindowState state, String text, int zHeight) throws WindowException {
-        super(xLeft, yTop, width, height, state, text);
-        this.zHeight = zHeight;
+      this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), state, text, zHeight);
     }
 
     public RectButton3D(int xLeft, int yTop, int width, int height, String state, String text, int zHeight) throws WindowException {
-       this(xLeft, yTop, width, height, text, zHeight);
-        setState(state);
+      this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), state, text, zHeight);
     }
 
     // Создает активную RectButton3D по координатам углов - левого верхнего и правого нижнего,  строке на кнопке text
@@ -43,8 +40,7 @@ public class RectButton3D extends RectButton {
 
     //Создает активную RectButton3D по координатам левого верхнего угла, ширине, строке на кнопке text и высоте zHeight.
     public RectButton3D(int xLeft, int yTop, int width, int height, String text, int zHeight) throws WindowException {
-        super(xLeft, yTop, width, height, text);
-        this.zHeight = zHeight;
+       this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1),WindowState.ACTIVE, text, zHeight);
     }
 
     // Возвращает высоту RectButton3D по оси Z.
