@@ -17,8 +17,10 @@ public class RoundButton extends RoundWindow {
         this.text = text;
     }
     public RoundButton(Point center, int radius, String state, String text) throws WindowException {
-        this(center, radius, text);
-        setState(state);
+        this.setCenter(center);
+        this.setRadius(radius);
+        this.setState(state);
+        this.setText(text);
     }
 
     public RoundButton(Point center, int radius, WindowState state) throws WindowException {
@@ -30,8 +32,8 @@ public class RoundButton extends RoundWindow {
         this(new Point(xCenter, yCenter), radius, state, text);
     }
     public RoundButton(int xCenter, int yCenter, int radius, String state, String text) throws WindowException{
-        this(xCenter, yCenter, radius, text);
-        setState(state);
+        this(new Point(xCenter, yCenter), radius, state, text);
+
     }
 
     public RoundButton(int xCenter, int yCenter, int radius, WindowState state) throws WindowException {
@@ -49,11 +51,11 @@ public class RoundButton extends RoundWindow {
 
     //Создает активную RoundButton по координатам центра и значению радиуса.
     public RoundButton(int xCenter, int yCenter, int radius, String text) throws WindowException {
-        this(xCenter, yCenter, radius, WindowState.ACTIVE, text);
+        this(xCenter, yCenter, radius, (WindowState) null, text);
     }
 
     public RoundButton(int xCenter, int yCenter, int radius) throws WindowException {
-        this(xCenter, yCenter, radius, WindowState.ACTIVE);
+        this(new Point(xCenter, yCenter), radius, (WindowState) null);
     }
 
     //Передвигает RoundButton  так, чтобы центр его оказался в точке  (x, y).
