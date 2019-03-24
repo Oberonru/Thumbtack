@@ -4,9 +4,6 @@ import net.thumbtack.school.windows.v4.base.WindowErrorCode;
 import net.thumbtack.school.windows.v4.base.WindowException;
 import net.thumbtack.school.windows.v4.base.WindowState;
 
-import javax.jws.WebService;
-import javax.xml.ws.WebServiceException;
-
 public class ComboBox extends ListBox {
 
     /**
@@ -16,10 +13,10 @@ public class ComboBox extends ListBox {
      * Предполагается, что всегда будут передаваться допустимые аргументы, то есть при создании или изменении всегда
      * будет выполняться : левая точка не правее правой, верхняя точка не выше нижней, номер выбранной строки не больше
      * значения (количество строк -1),
-     *
+     * <p>
      * если массив строк отсутствует, номер выбранной строки будет обязательно null.
-     *
-     *
+     * <p>
+     * <p>
      * Тем не менее в результате нескольких вызовов методов экземпляр класса может перейти в неконсистентное состояние,
      * например, если был установлен номер выбранной строки, а после этого массив строк устанавливается в null. В рамках
      * настоящего Задания мы не будем заниматься этими вопросами, отложим их до Задания 6.
@@ -36,7 +33,7 @@ public class ComboBox extends ListBox {
     // ComboBox ширины и высоты 1. Параметр lines может быть null.
     public ComboBox(Point topLeft, Point bottomRight, WindowState state, String[] lines, Integer selected) throws WindowException {
         super(topLeft, bottomRight, state, lines);
-            setSelected(selected);
+        setSelected(selected);
 
     }
 
@@ -49,36 +46,33 @@ public class ComboBox extends ListBox {
     //    Создает ComboBox по координатам левого верхнего угла, ширине, высоте, флагу активности,  набору строк и номеру
     // выделенной строки. Если выделенной строки нет, в качестве “selected” передается null. Параметр lines может быть null.
     public ComboBox(int xLeft, int yTop, int width, int height, WindowState state, String[] lines, Integer selected) throws WindowException {
-        super(xLeft, yTop, width, height, state, lines);
-        setSelected(selected);
+        this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), state, lines, selected);
     }
 
     public ComboBox(int xLeft, int yTop, int width, int height, String state, String[] lines, Integer selected) throws WindowException {
-        super(xLeft, yTop, width, height, state, lines);
-        setSelected(selected);
+        this(new Point(xLeft, yTop), new Point(xLeft + width - 1, yTop + height - 1), state, lines, selected);
     }
 
     //    Создает активный ComboBox по координатам углов - левого верхнего и правого нижнего, набору строк и номеру
     // выделенной строки. Если выделенной строки нет, в качестве “selected” передается null. Параметр lines может быть null.
     public ComboBox(Point topLeft, Point bottomRight, String[] lines, Integer selected) throws WindowException {
-        super(topLeft, bottomRight, lines);
-        setSelected(selected);
+        this(topLeft, bottomRight, (String) null, lines, selected);
     }
 
     //    Создает активный ComboBox по координатам левого верхнего угла, ширине, высоте, набору строк и номеру
     // выделенной строки. Если выделенной строки нет, в качестве “selected” передается null. Параметр lines может быть null.
     public ComboBox(int xLeft, int yTop, int width, int height, String[] lines, Integer selected) throws WindowException {
-        super(xLeft, yTop, width, height, lines);
-        setSelected(selected);
+        this(xLeft, yTop, width, height,(String) null, lines, selected);
     }
 
     // Возвращает номер выбранной строки ComboBox.
     public Integer getSelected() {
-        return selected != null  ? selected : null;
+        return selected != null ? selected : null;
     }
 
 
     //Устанавливает номер выбранной строки ComboBox.
+
     /**
      * Выбрасывается исключение WindowException с кодом ошибки EMPTY_ARRAY, если текущее значение lines равно null,
      * а значение параметра selected не равен null.
