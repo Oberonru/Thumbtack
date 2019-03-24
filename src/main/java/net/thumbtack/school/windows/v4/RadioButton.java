@@ -13,38 +13,32 @@ public class RadioButton extends RoundButton {
 
     private boolean checked;
 
-
+    public RadioButton(Point center, int radius, WindowState state, String text, boolean checked) throws WindowException {
+        super(center, radius, state, text);
+        this.checked = checked;
+    }
+    public RadioButton(Point center, int radius, String state, String text, boolean checked) throws WindowException {
+        super(center, radius, state, text);
+        this.checked = checked;
+    }
 
     // Создает RadioButton по координатам центра, значению радиуса, флагу активности, тексту и состоянию.
     public RadioButton(int xCenter, int yCenter, int radius, WindowState state, String text, boolean checked) throws WindowException {
-        super(xCenter, yCenter, radius, state, text);
-        this.checked = checked;
+       this(new Point(xCenter, yCenter), radius, state, text, checked);
     }
+
     public RadioButton(int xCenter, int yCenter, int radius, String state, String text, boolean checked) throws WindowException {
-        super(xCenter, yCenter, radius, text);
-        this.checked = checked;
-        setState(state);
-    }
-    public RadioButton(Point center, int radius, WindowState state, String text, boolean checked) throws WindowException {
-        this(center, radius, text, checked);
-        setState(state);
-    }
-    //Создает RadioButton по координатам центра, значению радиуса, флагу активности, тексту и состоянию.
-    public RadioButton(Point center, int radius, String state, String text, boolean checked) throws WindowException {
-        this(center, radius, text, checked);
-        setState(state);
+        this(new Point(xCenter, yCenter), radius, state, text, checked);
     }
 
     //Создает активную RadioButton по координатам центра, значению радиуса, тексту и состоянию.
     public RadioButton(Point center, int radius, String text, boolean checked) throws WindowException {
-        super(center, radius, text);
-        this.checked = checked;
+        this(center, radius, (WindowState) null, text, checked);
     }
 
     //Создает активную RadioButton по координатам центра,  значению радиуса, тексту и состоянию.
-    public RadioButton(int xCenter, int yCenter, int radius, String text, boolean checked) throws WindowException{
-        super(xCenter, yCenter, radius, text);
-        this.checked = checked;
+    public RadioButton(int xCenter, int yCenter, int radius, String text, boolean checked) throws WindowException {
+       this(new Point(xCenter, yCenter), radius, text, checked);
     }
 
 
