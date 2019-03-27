@@ -12,19 +12,19 @@ public class ArrayManager<T extends Window> {
 
 
     public ArrayManager(T[] arrayWindow) throws WindowException {
-      for (T elements : arrayWindow) {
-          if (elements == null) {
-              throw new WindowException(WindowErrorCode.NULL_WINDOW);
-          }
-      }
-        this.arrayWindow = arrayWindow;
+        setWindows(arrayWindow);
     }
 
     public T[] getWindows() {
         return arrayWindow;
     }
 
-    public void setWindows(T[] arrayWindow) {
+    public void setWindows(T[] arrayWindow) throws WindowException {
+        for (T elements : arrayWindow) {
+            if (elements == null) {
+                throw new WindowException(WindowErrorCode.NULL_WINDOW);
+            }
+        }
         this.arrayWindow = arrayWindow;
     }
 
