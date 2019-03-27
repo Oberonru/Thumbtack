@@ -5,7 +5,8 @@ public enum WindowErrorCode {
             "При создании окна передается WindowState.DESTROYED или null.  При изменении состояния состояние" +
             " устанавливается в null или окно, находящееся в WindowState.DESTROYED, переводится в иное состояние.\n"),
     WRONG_INDEX("Передан недопустимый индекс для массива строк."),
-    EMPTY_ARRAY("Массив строк равен null.");
+    EMPTY_ARRAY("Массив строк равен null."),
+    NULL_WINDOW("Попытке передачи null вместо окна Window");
 
     private String errorString;
 
