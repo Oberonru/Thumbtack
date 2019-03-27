@@ -14,18 +14,18 @@ public class PairManager<T extends Window, V extends Window> {
     private V secondWindow;
 
     public PairManager(T firstWindow, V secondWindow) throws WindowException {
-        if (firstWindow == null || secondWindow == null) {
-            throw new WindowException(WindowErrorCode.NULL_WINDOW);
-        }
-        this.firstWindow = firstWindow;
-        this.secondWindow = secondWindow;
+        setFirstWindow(firstWindow);
+        setSecondWindow(secondWindow);
     }
 
     public T getFirstWindow() {
         return firstWindow;
     }
 
-    public void setFirstWindow(T firstWindow) {
+    public void setFirstWindow(T firstWindow) throws WindowException {
+        if (firstWindow == null) {
+            throw new WindowException(WindowErrorCode.NULL_WINDOW);
+        }
         this.firstWindow = firstWindow;
     }
 
@@ -33,7 +33,10 @@ public class PairManager<T extends Window, V extends Window> {
         return secondWindow;
     }
 
-    public void setSecondWindow(V secondWindow) {
+    public void setSecondWindow(V secondWindow) throws WindowException {
+        if (secondWindow == null) {
+            throw new WindowException(WindowErrorCode.NULL_WINDOW);
+        }
         this.secondWindow = secondWindow;
     }
 
