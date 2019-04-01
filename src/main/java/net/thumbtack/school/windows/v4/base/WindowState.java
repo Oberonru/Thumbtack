@@ -15,15 +15,19 @@ public enum WindowState {
     INACTIVE,
     DESTROYED;
 
-    public static WindowState fromString(String stateString) {
-        if (stateString == WindowState.ACTIVE.toString()) {
+    public static WindowState fromString(String stateString) throws WindowException {
+        if (stateString == null) {
+            throw new WindowException(WindowErrorCode.WRONG_STATE);
+        }
+        if (stateString.equals(WindowState.ACTIVE.toString())) {
             return ACTIVE;
         }
-        if (stateString == WindowState.INACTIVE.toString()) {
+        if (stateString.equals(WindowState.INACTIVE.toString())) {
             return INACTIVE;
         }
-        if (stateString == WindowState.DESTROYED.toString()) {
+        if (stateString.equals(WindowState.DESTROYED.toString())) {
             return DESTROYED;
-        } else return null;
+        }
+        return null;
     }
 }
