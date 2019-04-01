@@ -10,7 +10,7 @@ public class Manager<T extends Window> {
     private T window;
 
     public Manager(T window) throws WindowException {
-        this.window = window;
+       setWindow(window);
     }
 
     public T getWindow() {

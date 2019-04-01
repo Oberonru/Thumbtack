@@ -1,7 +1,6 @@
 package net.thumbtack.school.windows.managers;
 
 import net.thumbtack.school.windows.v4.base.Window;
-import net.thumbtack.school.windows.v4.base.WindowErrorCode;
 import net.thumbtack.school.windows.v4.base.WindowException;
 
 public class NamedManager<T> extends Manager {
@@ -11,8 +10,7 @@ public class NamedManager<T> extends Manager {
 
     public NamedManager(Window window, String name) throws WindowException {
         super(window);
-
-        this.name = name;
+        setName(name);
     }
 
     public String getName() {
