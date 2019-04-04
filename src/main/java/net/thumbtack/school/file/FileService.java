@@ -1,6 +1,7 @@
 package net.thumbtack.school.file;
 
 import net.thumbtack.school.ttschool.Trainee;
+import net.thumbtack.school.windows.v4.Point;
 import net.thumbtack.school.windows.v4.RectButton;
 
 import java.io.*;
@@ -146,14 +147,13 @@ public class FileService {
     // Используйте DataInputStream.
     public static RectButton readRectButtonFromBinaryFile(File file) {
         try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file))) {
-
-            int X_TopLeft = dataInputStream.readInt();
-            int Y_TopLeft = dataInputStream.readInt();
-            int X_BottomRight = dataInputStream.readInt();
-            int Y_BottomRight = dataInputStream.readInt();
+            int X_TopLeft = Integer.parseInt(dataInputStream.readUTF());
+            int Y_TopLeft = Integer.parseInt(dataInputStream.readUTF());
+            int X_BottomRight = Integer.parseInt(dataInputStream.readUTF());
+            int Y_BottomRight = Integer.parseInt(dataInputStream.readUTF());
             String state = dataInputStream.readUTF();
             String text = dataInputStream.readUTF();
-            return new RectButton(X_TopLeft, Y_TopLeft, X_BottomRight, Y_BottomRight, state, text);
+            return new RectButton(new Point(X_TopLeft, Y_TopLeft), new Point(X_BottomRight, Y_BottomRight), state, text);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -169,66 +169,217 @@ public class FileService {
     //12.Записывает массив из RectButton в двоичный файл, имя файла задается экземпляром класса File.
     // Поле состояния и текст не записываются.
     public static void writeRectButtonArrayToBinaryFile(File file, RectButton[] rects) {
-
+        try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(file))) {
+            for (RectButton rectButton : rects) {
+                dataOutputStream.writeInt(rectButton.getTopLeft().getX());
+                dataOutputStream.writeInt(rectButton.getTopLeft().getY());
+                dataOutputStream.writeInt(rectButton.getBottomRight().getX());
+                dataOutputStream.writeInt(rectButton.getBottomRight().getY());
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //13.В файле массива данных RectButton из предыдущего упражнения увеличивает на 1 значение x каждой точки каждого
     // RectButton. Имя файла задается экземпляром класса File.
     public static void modifyRectButtonArrayInBinaryFile(File file) {
-
+        try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file))) {
+            int X_TopLeft = dataInputStream.readInt() + 1;
+            int Y_TopLeft = dataInputStream.readInt();
+            int X_BottomRight = dataInputStream.readInt() + 1;
+            int Y_BottomRight = dataInputStream.readInt();
+            //RectButton rectButton = new RectButton(new Point(X_TopLeft, Y_TopLeft), new Point(X_BottomRight, Y_BottomRight));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //14.Читает данные, записанные в формате предыдущего упражнения и создает на их основе массив RectButton c с
     // состоянием “ACTIVE” и текстом “OK”.
     public static RectButton[] readRectButtonArrayFromBinaryFile(File file) {
+        ArrayList<RectButton> rectButtonArrayList = new ArrayList<>();
+        try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file))) {
+            while (dataInputStream.available() > 0) {
+                int X_TopLeft = dataInputStream.readInt() + 1;
+                int Y_TopLeft = dataInputStream.readInt();
+                int X_BottomRight = dataInputStream.readInt() + 1;
+                int Y_BottomRight = dataInputStream.readInt();
+                String state = "ACTIVE";
+                String text = "OK";
+
+                rectButtonArrayList.add(new RectButton(new Point(X_TopLeft, Y_TopLeft),
+                        new Point(X_BottomRight, Y_BottomRight), state, text));
+            }
+            return (RectButton[]) rectButtonArrayList.toArray(new RectButton[rectButtonArrayList.size()]);
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     //15.Записывает RectButton в текстовый файл в одну строку, имя файла задается экземпляром класса File.
     // Поля в файле разделяются пробелами.
     public static void writeRectButtonToTextFileOneLine(File file, RectButton rectButton) {
-
+        try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(file))) {
+            dataOutputStream.writeUTF(rectButton.getTopLeft().getX() + " " + rectButton.getTopLeft().getY() + " " +
+                    rectButton.getBottomRight().getX() + " " + rectButton.getBottomRight().getY() + " " +
+                    rectButton.getState() + " " + rectButton.getText());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //16.Читает данные для RectButton из текстового файла и создает на их основе экземпляр RectButton, имя файла
     // задается экземпляром класса File. Предполагается, что данные в файл записаны в формате предыдущего упражнения.
     public static RectButton readRectButtonFromTextFileOneLine(File file) {
+
+        try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file))) {
+            String[] splitArray = dataInputStream.readUTF().split(" ");
+            int X_TopLeft = Integer.parseInt(splitArray[0]);
+            int Y_TopLeft = Integer.parseInt(splitArray[1]);
+            int X_BottomRight = Integer.parseInt(splitArray[2]);
+            int Y_BottomRight = Integer.parseInt(splitArray[3]);
+
+            return new RectButton(new Point(X_TopLeft, Y_TopLeft),
+                    new Point(X_BottomRight, Y_BottomRight), splitArray[4], splitArray[5]);
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     //17.Записывает RectButton в текстовый файл В первые 4 строки записываются координаты
     // (каждое число в отдельной строке) , в следующие 2 - состояние и текст. Имя файла задается экземпляром класса File.
     public static void writeRectButtonToTextFileSixLines(File file, RectButton rectButton) {
-
+        try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(file))) {
+            String lineSeparator = System.getProperty("line.separator");
+            dataOutputStream.writeUTF(String.valueOf(rectButton.getTopLeft().getX()) + lineSeparator);
+            dataOutputStream.writeUTF(String.valueOf(rectButton.getTopLeft().getY()) + lineSeparator);
+            dataOutputStream.writeUTF(String.valueOf(rectButton.getBottomRight().getX()) + lineSeparator);
+            dataOutputStream.writeUTF(String.valueOf(rectButton.getBottomRight().getY()) + lineSeparator);
+            dataOutputStream.writeUTF(String.valueOf(rectButton.getState()) + lineSeparator);
+            dataOutputStream.writeUTF(rectButton.getText());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //18.Читает данные для RectButton из текстового файла и создает на их основе экземпляр RectButton, имя файла
     // задается экземпляром класса File. Предполагается, что данные в файл записаны в формате предыдущего упражнения.
     public static RectButton readRectButtonFromTextFileSixLines(File file) {
+        try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file))) {
+            int X_TopLeft = Integer.parseInt(dataInputStream.readUTF());
+            int Y_TopLeft = Integer.parseInt(dataInputStream.readUTF());
+            int X_BottomRight = Integer.parseInt(dataInputStream.readUTF());
+            int Y_BottomRight = Integer.parseInt(dataInputStream.readUTF());
+            String state = dataInputStream.readUTF();
+            String text = dataInputStream.readUTF();
+            return new RectButton(new Point(X_TopLeft, Y_TopLeft), new Point(X_BottomRight, Y_BottomRight), state, text);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     //19.Записывает Trainee в текстовый файл в одну строку в кодировке UTF-8, имя файла задается экземпляром класса
     // File. Имя, фамилия и оценка в файле разделяются пробелами.
+    //Тест прошёл
     public static void writeTraineeToTextFileOneLine(File file, Trainee trainee) {
-
+        try(DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(file))) {
+            dataOutputStream.writeUTF(trainee.getFirstName() + " " + trainee.getLastName() + " " + trainee.getRating());
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //20.Читает данные для Trainee из текстового файла и создает на их основе экземпляр Trainee, имя файла задается
     // экземпляром класса File. Предполагается, что данные в файл записаны в формате предыдущего упражнения.
+    //19 и 20 is complete
     public static Trainee readTraineeFromTextFileOneLine(File file) {
+        try(DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file))) {
+            String[] traineeTextArray = dataInputStream.readUTF().split(" ");
+            return new Trainee(traineeTextArray[0], traineeTextArray[1], Integer.parseInt(traineeTextArray[2]));
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     //21.Записывает Trainee в текстовый файл в кодировке UTF-8, каждое поле в отдельной строке, имя файла задается
     // экземпляром класса File.
     public static void writeTraineeToTextFileThreeLines(File file, Trainee trainee) {
-
+        try(DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(file))) {
+            String lineSeparator = System.getProperty("line.separator");
+            dataOutputStream.writeUTF(trainee.getFirstName() + lineSeparator + trainee.getLastName() + lineSeparator +
+                    trainee.getRating());
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //22.Читает данные для Trainee из текстового файла и создает на их основе экземпляр Trainee, имя файла задается
     // экземпляром класса File. Предполагается, что данные в файл записаны в формате предыдущего упражнения.
+    //21 - 22 is complete
     public static Trainee readTraineeFromTextFileThreeLines(File file) {
+        try(DataInputStream  dataInputStream = new DataInputStream(new FileInputStream(file))) {
+            String lineSeparator = System.getProperty("line.separator");
+            String[] traineeArray = dataInputStream.readUTF().split(lineSeparator);
+            return new Trainee(traineeArray[0], traineeArray[1],Integer.parseInt(traineeArray[2]));
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
