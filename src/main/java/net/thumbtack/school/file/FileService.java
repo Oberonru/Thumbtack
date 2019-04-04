@@ -380,12 +380,32 @@ public class FileService {
 
     //23.Сериализует Trainee в двоичный файл, имя файла задается экземпляром класса File.
     public static void serializeTraineeToBinaryFile(File file, Trainee trainee) {
-
+       try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file))) {
+           objectOutputStream.writeObject(trainee);
+           objectOutputStream.flush();
+       }
+       catch (UnsupportedEncodingException e) {
+           e.printStackTrace();
+       } catch (IOException e) {
+           e.printStackTrace();
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
     }
 
     //24.    Десериализует Trainee из двоичного файла, имя файла задается экземпляром класса File. Предполагается, что
     // данные в файл записаны в формате предыдущего упражнения.
     public static Trainee deserializeTraineeFromBinaryFile(File file) {
+        try(ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file))) {
+           return (Trainee) objectInputStream.readObject();
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
