@@ -276,12 +276,10 @@ public class FileService {
     public static void writeRectButtonToTextFileSixLines(File file, RectButton rectButton) {
         try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(file))) {
             String lineSeparator = System.getProperty("line.separator");
-            dataOutputStream.writeUTF(String.valueOf(rectButton.getTopLeft().getX()) + lineSeparator);
-            dataOutputStream.writeUTF(String.valueOf(rectButton.getTopLeft().getY()) + lineSeparator);
-            dataOutputStream.writeUTF(String.valueOf(rectButton.getBottomRight().getX()) + lineSeparator);
-            dataOutputStream.writeUTF(String.valueOf(rectButton.getBottomRight().getY()) + lineSeparator);
-            dataOutputStream.writeUTF(String.valueOf(rectButton.getState()) + lineSeparator);
-            dataOutputStream.writeUTF(rectButton.getText());
+            dataOutputStream.writeUTF(String.valueOf(rectButton.getTopLeft().getX()) + lineSeparator +
+                    String.valueOf(rectButton.getTopLeft().getY()) + lineSeparator + String.valueOf(rectButton.getBottomRight().getX())
+                    + lineSeparator + String.valueOf(rectButton.getBottomRight().getY()) + lineSeparator +
+                    rectButton.getState() + lineSeparator + rectButton.getText());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -295,13 +293,10 @@ public class FileService {
     // задается экземпляром класса File. Предполагается, что данные в файл записаны в формате предыдущего упражнения.
     public static RectButton readRectButtonFromTextFileSixLines(File file) {
         try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file))) {
-            int X_TopLeft = Integer.parseInt(dataInputStream.readUTF());
-            int Y_TopLeft = Integer.parseInt(dataInputStream.readUTF());
-            int X_BottomRight = Integer.parseInt(dataInputStream.readUTF());
-            int Y_BottomRight = Integer.parseInt(dataInputStream.readUTF());
-            String state = dataInputStream.readUTF();
-            String text = dataInputStream.readUTF();
-            return new RectButton(new Point(X_TopLeft, Y_TopLeft), new Point(X_BottomRight, Y_BottomRight), state, text);
+            String lineSeparator = System.getProperty("line.separator");
+            String[] splitArray = dataInputStream.readUTF().split(lineSeparator);
+            return new RectButton(new Point(Integer.parseInt(splitArray[0]),Integer.parseInt(splitArray[1])),
+                    new Point(Integer.parseInt(splitArray[2]), Integer.parseInt(splitArray[3])), splitArray[4], splitArray[5]);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {
