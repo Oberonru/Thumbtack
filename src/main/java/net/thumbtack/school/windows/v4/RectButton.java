@@ -65,17 +65,15 @@ public class RectButton extends RectWindow implements Movable {
 
     //Передвигает RectButton так, чтобы левый верхний угол его оказался в точке (x, y).
     public void moveTo(int x, int y) {
-        int originWidth = getWidth();
-        int originHeight = getHeight();
-        getTopLeft().setX(x);
-        getTopLeft().setY(y);
-        getBottomRight().setX(getTopLeft().getX() + originWidth - 1);
-        getBottomRight().setY(getTopLeft().getY() + originHeight - 1);
+        moveRel(x - getTopLeft().getX(), y - getTopLeft().getY());
     }
 
     //Передвигает RectButton на (dx, dy).
     public void moveRel(int dx, int dy) {
-        moveTo(getTopLeft().getX() + dx, getTopLeft().getY() + dy);
+        getTopLeft().setX(getTopLeft().getX() + dx);
+        getTopLeft().setY(getTopLeft().getY() + dy);
+        getBottomRight().setX(getBottomRight().getX() + dx);
+        getBottomRight().setY(getBottomRight().getY() + dy);
     }
 
     //Изменяет ширину и длину RectButton в ratio раз при сохранении координат левой верхней точки.

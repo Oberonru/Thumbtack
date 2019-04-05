@@ -3,6 +3,8 @@ package net.thumbtack.school.file;
 import net.thumbtack.school.ttschool.Trainee;
 import net.thumbtack.school.windows.v4.Point;
 import net.thumbtack.school.windows.v4.RectButton;
+import net.thumbtack.school.windows.v4.base.WindowState;
+import org.w3c.dom.css.Rect;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -188,19 +190,11 @@ public class FileService {
     //13.В файле массива данных RectButton из предыдущего упражнения увеличивает на 1 значение x каждой точки каждого
     // RectButton. Имя файла задается экземпляром класса File.
     public static void modifyRectButtonArrayInBinaryFile(File file) {
-        try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file))) {
-            int X_TopLeft = dataInputStream.readInt() + 1;
-            int Y_TopLeft = dataInputStream.readInt();
-            int X_BottomRight = dataInputStream.readInt() + 1;
-            int Y_BottomRight = dataInputStream.readInt();
-            //RectButton rectButton = new RectButton(new Point(X_TopLeft, Y_TopLeft), new Point(X_BottomRight, Y_BottomRight));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+        RectButton[] buttons = readRectButtonArrayFromBinaryFile(file);
+        for (RectButton button : buttons) {
+            button.moveRel(1, 0);
         }
+        writeRectButtonArrayToBinaryFile(file, buttons);
     }
 
     //14.Читает данные, записанные в формате предыдущего упражнения и создает на их основе массив RectButton c с
@@ -209,17 +203,15 @@ public class FileService {
         ArrayList<RectButton> rectButtonArrayList = new ArrayList<>();
         try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file))) {
             while (dataInputStream.available() > 0) {
-                int X_TopLeft = dataInputStream.readInt() + 1;
+                int X_TopLeft = dataInputStream.readInt();
                 int Y_TopLeft = dataInputStream.readInt();
-                int X_BottomRight = dataInputStream.readInt() + 1;
+                int X_BottomRight = dataInputStream.readInt();
                 int Y_BottomRight = dataInputStream.readInt();
-                String state = "ACTIVE";
-                String text = "OK";
 
                 rectButtonArrayList.add(new RectButton(new Point(X_TopLeft, Y_TopLeft),
-                        new Point(X_BottomRight, Y_BottomRight), state, text));
+                        new Point(X_BottomRight, Y_BottomRight), WindowState.ACTIVE,"OK"));
             }
-            return (RectButton[]) rectButtonArrayList.toArray(new RectButton[rectButtonArrayList.size()]);
+            return rectButtonArrayList.toArray(new RectButton[rectButtonArrayList.size()]);
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -309,7 +301,6 @@ public class FileService {
 
     //19.Записывает Trainee в текстовый файл в одну строку в кодировке UTF-8, имя файла задается экземпляром класса
     // File. Имя, фамилия и оценка в файле разделяются пробелами.
-    //Тест прошёл
     public static void writeTraineeToTextFileOneLine(File file, Trainee trainee) {
         try(DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(file))) {
             dataOutputStream.writeUTF(trainee.getFirstName() + " " + trainee.getLastName() + " " + trainee.getRating());
@@ -325,7 +316,6 @@ public class FileService {
 
     //20.Читает данные для Trainee из текстового файла и создает на их основе экземпляр Trainee, имя файла задается
     // экземпляром класса File. Предполагается, что данные в файл записаны в формате предыдущего упражнения.
-    //19 и 20 is complete
     public static Trainee readTraineeFromTextFileOneLine(File file) {
         try(DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file))) {
             String[] traineeTextArray = dataInputStream.readUTF().split(" ");
@@ -360,7 +350,6 @@ public class FileService {
 
     //22.Читает данные для Trainee из текстового файла и создает на их основе экземпляр Trainee, имя файла задается
     // экземпляром класса File. Предполагается, что данные в файл записаны в формате предыдущего упражнения.
-    //21 - 22 is complete
     public static Trainee readTraineeFromTextFileThreeLines(File file) {
         try(DataInputStream  dataInputStream = new DataInputStream(new FileInputStream(file))) {
             String lineSeparator = System.getProperty("line.separator");
@@ -413,8 +402,8 @@ public class FileService {
     public static String serializeTraineeToJsonString(Trainee trainee) {
         String serializableString = new String(String.valueOf(trainee));
        try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(serializableString))) {
-         objectOutputStream.writeUTF(serializableString);
-
+          objectOutputStream.writeObject(trainee);
+           return serializableString;
 
        }catch (UnsupportedEncodingException e) {
            e.printStackTrace();
@@ -423,13 +412,22 @@ public class FileService {
        } catch (Exception e) {
            e.printStackTrace();
        }
-
-
         return "";
     }
 
     //26. Десериализует Trainee из текстовой строки с Json-представлением Trainee.
     public static Trainee deserializeTraineeFromJsonString(String json) {
+        try(ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(json))) {
+          return  (Trainee) objectInputStream.readObject();
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
