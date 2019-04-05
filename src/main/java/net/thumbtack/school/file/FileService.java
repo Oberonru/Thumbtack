@@ -411,6 +411,20 @@ public class FileService {
 
     //25.Сериализует Trainee в формате Json в текстовую строку.
     public static String serializeTraineeToJsonString(Trainee trainee) {
+        String serializableString = new String(String.valueOf(trainee));
+       try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(serializableString))) {
+         objectOutputStream.writeUTF(serializableString);
+
+
+       }catch (UnsupportedEncodingException e) {
+           e.printStackTrace();
+       } catch (IOException e) {
+           e.printStackTrace();
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+
+
         return "";
     }
 
@@ -421,11 +435,30 @@ public class FileService {
 
     //27.Сериализует Trainee в формате Json в файл, имя файла задается экземпляром класса File.
     public static void serializeTraineeToJsonFile(File file, Trainee trainee) {
-
+        try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file))) {
+            objectOutputStream.writeObject(trainee);
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //28.Десериализует Trainee из файла с Json-представлением Trainee, имя файла задается экземпляром класса File.
     public static Trainee deserializeTraineeFromJsonFile(File file) {
+        try(ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file))) {
+            return (Trainee) objectInputStream.readObject();
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
