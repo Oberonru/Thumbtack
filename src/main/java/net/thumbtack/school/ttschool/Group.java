@@ -116,10 +116,8 @@ public class Group {
     public void rotateTraineeList(int positions) {
         if (positions > 0) {
             for (int i = 0; i < positions; i++) {
-                int finishIndex = trainees.size();
                 trainees.add(0, trainees.get(trainees.size() - 1));
-                trainees.remove(finishIndex);
-
+                trainees.remove(trainees.size());
             }
         } else if(positions < 0) {
             for (int i = positions; i < 0; i++) {
