@@ -67,14 +67,7 @@ public class School {
     //9.Удаляет Group с данным названием из школы. Если группа с таким названием не найдена, выбрасывает
     // TrainingException с TrainingErrorCode.GROUP_NOT_FOUND
     public void removeGroup(String name) throws TrainingException {
-        boolean isRemoved = false;
-        for (Group groupItem : groups) {
-            if (groupItem.getName().equals(name)) {
-                groups.remove(groupItem);
-                isRemoved = true;
-            }
-        }
-        if (!isRemoved) {
+        if (!groups.removeIf(t -> t.getName().equals(name))) {
             throw new TrainingException(TrainingErrorCode.GROUP_NOT_FOUND);
         }
     }
