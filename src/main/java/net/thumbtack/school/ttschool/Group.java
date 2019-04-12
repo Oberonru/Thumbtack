@@ -117,7 +117,7 @@ public class Group {
         if (positions > 0) {
             for (int i = 0; i < positions; i++) {
                 trainees.add(0, trainees.get(trainees.size() - 1));
-                trainees.remove(trainees.size());
+                trainees.remove(trainees.size() - 1);
             }
         } else if(positions < 0) {
             for (int i = positions; i < 0; i++) {
