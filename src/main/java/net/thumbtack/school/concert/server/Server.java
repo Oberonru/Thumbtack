@@ -77,12 +77,12 @@ public class Server {
         return "{}";
     }
 
-    public String addRating(String requestJsonString) {
+    public String addRating(String requestJsonString)  {
         AddRatingRequest addRatingRequest = gson.fromJson(requestJsonString, AddRatingRequest.class);
         String tokenId = addRatingRequest.getTokenId();
 
         if (!isTokenValid(tokenId)) {
-            return gson.toJson(new ErrorResponse("Token is not valid"), ErrorResponse.class);
+            return gson.toJson(new ServerException(Error.TOKEN_INVALID),ServerException.class);
         }
 
         for (Song song : songList) {
