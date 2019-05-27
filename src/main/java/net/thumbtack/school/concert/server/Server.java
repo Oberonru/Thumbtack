@@ -21,7 +21,7 @@ public class Server {
     //Производит всю необходимую инициализацию и запускает сервер.
     //savedDataFileName - имя файла, в котором было сохранено состояние сервера.  Если savedDataFileName == null,
     // восстановление состояния не производится, сервер стартует “с нуля”.
-    public void startServer(String savedDataFileName) throws Exception {
+    public void startServer(String savedDataFileName) {
         if (savedDataFileName == null) {
             userList = new ArrayList<>();
             songList = new ArrayList<>();
@@ -48,7 +48,7 @@ public class Server {
      * @param requestJsonString Все данные для запроса должны быть упакованы в json-строку
      * @return json-строку с результатом выполнения операции.
      */
-    public String registerUser(String requestJsonString) throws Exception {
+    public String registerUser(String requestJsonString)  {
 
         if (!isStarted) {
             return "{\"errorCode:\"Server is not started\"}";
@@ -71,20 +71,8 @@ public class Server {
         return gson.toJson(response);
     }
 
-    public String addSong(String requestJsonString) throws ServerException {
-
-//        if (!isUserRegistred) {
-//            return "{\"errorCode:\"User is not registered\"}";
-//        }
+    public String addSong(String requestJsonString){
         AddSongRequest request = gson.fromJson(requestJsonString, AddSongRequest.class);
-//        if (verifyToken(requestJsonString)) {
-//            return "{\"errorCode:\" tokenId is INVALID}";
-//        }
-//        for (User userItem : userList) {//правильно ли пробегать по всем пользователям?
-//            if (userItem.getToken() == null) {
-//                return "{\"errorCode:\" tokenId is null}";
-//            }
-//        }
         songList.addAll(request.getSongs());
         return "{}";
     }
