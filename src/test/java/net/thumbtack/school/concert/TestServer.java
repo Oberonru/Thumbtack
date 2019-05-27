@@ -2,17 +2,13 @@ package net.thumbtack.school.concert;
 
 import com.google.gson.Gson;
 import net.thumbtack.school.concert.server.Server;
-import net.thumbtack.school.concert.server.Song;
-import net.thumbtack.school.concert.server.model.AddSongRequest;
-import net.thumbtack.school.concert.server.model.AuthenticationData;
-import net.thumbtack.school.concert.server.model.RegisterUserResponse;
+import net.thumbtack.school.concert.server.model.*;
+import net.thumbtack.school.concert.server.song.Song;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.is;
 
 public class TestServer {
     private static Gson gson = new Gson();
@@ -103,6 +99,79 @@ public class TestServer {
         Assert.assertArrayEquals(songList.get(1).getAuthor(), songs.get(1).getAuthor());
         Assert.assertEquals(songList.get(1).getSinger(), songs.get(1).getSinger());
         Assert.assertEquals(songList.get(1).getTime(), songs.get(1).getTime(), 0);
+    }
+
+//    @Test
+//    public void testAddSong_serverIsNotStarted() throws Exception {
+////      JsonReader jsonReader = new JsonReader(new FileReader("D:\\Thumbtack\\thumbtack_online_school_2018_2_aleksei_petrushenko\\src\\test\\mock\\json\\addSong_1.json"));
+////      JsonObject addSongJson = jsonReader.
+//        Server server = new Server();
+//        //уже здесь выкидывает ошибу, здесь прервывать программу? или где addSongResponseString
+//        String responseString = server.registerUser(USER_JSON);
+//        RegisterUserResponse registerResponse = gson.fromJson(responseString, RegisterUserResponse.class);
+//        String tokenId = registerResponse.getTokenId();
+//
+//        String[] musicians = {"Musician 1", "Musician 2"};
+//        String[] authors = {"Author"};
+//        Song song1 = new Song("Name", musicians, authors, "Singer", 3.2);
+//        Song song2 = new Song("Different Name", musicians, authors, "Same Singer", 2.2);
+//        List<Song> songs = new ArrayList();
+//        songs.add(song1);
+//        songs.add(song2);
+//        AddSongRequest requestObject = new AddSongRequest();
+//        requestObject.setTokenId(tokenId);
+//        requestObject.setSongs(songs);
+//        //при попытке добавить песню должно обрываться
+//        String addSongResponseString = server.addSong(gson.toJson(requestObject, AddSongRequest.class));
+//
+//
+//        Assert.assertEquals(addSongResponseString, "{\"errorCode:\"Server is not started\"}");
+//    }
+
+    @Test
+    public void testLogIn() throws Exception {
+        Server server = new Server();
+        server.startServer(null);
+        String tokenJsonString = server.registerUser(USER_JSON);
+        server.logIn(tokenJsonString);
+        Assert.assertEquals("{\"User is loginned\"}", server.logIn(tokenJsonString));
+    }
+
+    @Test
+    public void testLogIn_invalidToken() throws Exception {
+        Server server = new Server();
+        server.startServer(null);
+        String tokenId = server.registerUser(USER_JSON);
+        RegisterUserResponse registerUserResponse = gson.fromJson(tokenId,RegisterUserResponse.class);
+        LogInRequest logInRequest = new LogInRequest();
+        logInRequest.setTokenId(null);
+        Assert.assertEquals("{\"fig\": user is not loginned}",server.logIn(gson.toJson(logInRequest)));
+    }
+
+    @Test
+    public void testLogOut() throws Exception {
+        Server server = new Server();
+        server.startServer(null);
+        String responseString = server.registerUser(USER_JSON);
+        RegisterUserResponse registerUserResponse = gson.fromJson(responseString, RegisterUserResponse.class);
+        LogOutRequest logOutRequest = new LogOutRequest();
+        logOutRequest.setTokenId(registerUserResponse.getTokenId());
+        server.logOut(gson.toJson(logOutRequest, LogOutRequest.class));
+        VerifyTokenRequest verifyRequest = new VerifyTokenRequest();
+        verifyRequest.setTokenId(registerUserResponse.getTokenId());
+        VerifyTokenResponse verifyResponse =
+                gson.fromJson(server.verifyToken(gson.toJson(verifyRequest)), VerifyTokenResponse.class);
+        Assert.assertFalse(verifyResponse.isSuccess());
+    }
+    @Test
+    public void testAddSong_userIsNotLoggedIn() throws Exception {
+        Server server = new Server();
+        server.startServer(null);
+        String responseString = server.registerUser(USER_JSON);
+        RegisterUserResponse registerUserResponse = gson.fromJson(responseString, RegisterUserResponse.class);
+        LogOutRequest logOutRequest = new LogOutRequest();
+        logOutRequest.setTokenId(registerUserResponse.getTokenId());
+        server.logOut(gson.toJson(logOutRequest, LogOutRequest.class));
     }
 
 //    @Test

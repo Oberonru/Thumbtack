@@ -2,8 +2,9 @@ package net.thumbtack.school.concert.server;
 
 import com.google.gson.Gson;
 import net.thumbtack.school.concert.User;
-import net.thumbtack.school.concert.server.model.AddSongRequest;
-import net.thumbtack.school.concert.server.model.RegisterUserResponse;
+import net.thumbtack.school.concert.server.model.*;
+import net.thumbtack.school.concert.server.song.Rating;
+import net.thumbtack.school.concert.server.song.Song;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,9 +72,10 @@ public class Server {
     }
 
     public String addSong(String requestJsonString) throws ServerException {
-        if (!isUserRegistred) {
-            return "{\"errorCode:\"User is not registered\"}";
-        }
+
+//        if (!isUserRegistred) {
+//            return "{\"errorCode:\"User is not registered\"}";
+//        }
         AddSongRequest request = gson.fromJson(requestJsonString, AddSongRequest.class);
 //        if (verifyToken(requestJsonString)) {
 //            return "{\"errorCode:\" tokenId is INVALID}";
@@ -84,39 +86,54 @@ public class Server {
 //            }
 //        }
         songList.addAll(request.getSongs());
-        //Метод при успешном выполнении возвращает пустной json(условие)
         return "{}";
     }
 
-    public void logOut(String requestJsonString) {
-        //убираем началюную и конечную кавычки, как из Жсона в строку перевести аргумент не знаю, выдаёт ошибку
-        String tokenId = requestJsonString.substring(1, requestJsonString.length() - 1);
+    public String addRating(String requestJsonString) {
+        AddRatingRequest addRatingRequest = gson.fromJson(requestJsonString, AddRatingRequest.class);
+        String tokenId = addRatingRequest.getTokenId();
+
+        if (!isTokenValid(tokenId)) {
+            return gson.toJson(new ErrorResponse("Token is not valid"), ErrorResponse.class);
+        }
+
+        for (Song song : songList) {
+            if(song.getSongId().equals(addRatingRequest.getSongId())) {
+                song.addRating(new Rating(addRatingRequest.getRating(), getUserByToken(tokenId)));
+            }
+        }
+        return "{}";
+    }
+
+    public String logIn(String requestJsonString) {
+        LogInRequest logInRequest = gson.fromJson(requestJsonString, LogInRequest.class);
+        String tokenId = logInRequest.getTokenId();
         for (User userItem : userList) {
-            if (tokenId.equals(userItem.getToken())) {
+            if (userItem.getToken().equals(tokenId)) {
+                return "{\"User is loginned\"}";
+            }
+        }
+        return "{\"fig\": user is not loginned}";
+    }
+
+    public void logOut(String requestJsonString) {
+        LogOutRequest logOutRequest = gson.fromJson(requestJsonString, LogOutRequest.class);
+        String tokenId = logOutRequest.getTokenId();
+        for (User userItem : userList) {
+            if (userItem.getToken().equals(tokenId)) {
                 userItem.setToken(null);
+                System.out.println("tokenId is null");
                 break;
             }
         }
     }
 
-    private boolean verifyToken(String json) {
-//        Song song = gson.fromJson(json, Song.class);
-//        String tokenId = song.getTokenId();
-//        for (User userItem : userList) {
-//            if (userItem.getToken().equals(tokenId)) {
-//                return true;
-//            }
-//        }
-//        return false;
-        return true;
-    }
-
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public String verifyToken(String json) {
+        VerifyTokenRequest request = gson.fromJson(json, VerifyTokenRequest.class);
+        if (isTokenValid(request.getTokenId())) {
+            return gson.toJson(new VerifyTokenResponse(true), VerifyTokenResponse.class);
+        }
+        return gson.toJson(new VerifyTokenResponse(false), VerifyTokenResponse.class);
     }
 
     public List<Song> getSongList() {
@@ -125,5 +142,25 @@ public class Server {
 
     public void setSongList(List<Song> songList) {
         this.songList = songList;
+    }
+
+    private boolean isTokenValid(String token) {
+        for (User user : userList) {
+            String userToken = user.getToken();
+            if (userToken != null && userToken.equals(token)) {
+                return true;
+            }
+        }
+        return  false;
+    }
+
+    private User getUserByToken(String token) {
+        for (User user : userList) {
+            String userToken = user.getToken();
+            if (userToken != null && userToken.equals(token)) {
+                return user;
+            }
+        }
+        return null;
     }
 }

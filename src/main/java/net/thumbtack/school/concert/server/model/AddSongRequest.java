@@ -1,6 +1,6 @@
 package net.thumbtack.school.concert.server.model;
 
-import net.thumbtack.school.concert.server.Song;
+import net.thumbtack.school.concert.server.song.Song;
 
 import java.util.List;
 

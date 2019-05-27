@@ -2,13 +2,10 @@ package net.thumbtack.school.concert;
 
 import net.thumbtack.school.concert.server.Error;
 import net.thumbtack.school.concert.server.ServerException;
-import net.thumbtack.school.concert.server.Song;
+import net.thumbtack.school.concert.server.song.Song;
 
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.List;
-import java.util.UUID;
 
 public class User {
     private String lastName;
