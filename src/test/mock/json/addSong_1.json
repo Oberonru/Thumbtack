@@ -1,0 +1,17 @@
+{
+  "tokenId": 1,
+  "songs": [
+    {
+      "name": "Ramambaharamamburum",
+      "musician": [
+        "Burum",
+        "Shurum"
+      ],
+      "author": [
+        "Lohmatii"
+      ],
+      "singer": "Lisii",
+      "time": 3.2
+    }
+  ]
+}

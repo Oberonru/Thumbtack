@@ -8,7 +8,7 @@ public class Rating {
     private Integer rating;
     private User author;
 
-    public Rating(Integer rating, User author) throws ServerException {
+    public Rating(Integer rating, User author) {
         setRating(rating);
         setAuthor(author);
     }
@@ -25,11 +25,7 @@ public class Rating {
         this.author = author;
     }
 
-    public void setRating(Integer rating) throws ServerException {
-        if (rating < 0 || rating > 5 || rating == null) {
-            throw new ServerException(Error.RATING_IS_ERROR);
-        }
+    public void setRating(Integer rating) {
         this.rating = rating;
-
     }
 }

@@ -77,9 +77,14 @@ public class Server {
         return "{}";
     }
 
-    public String addRating(String requestJsonString)  {
+    public String addRating(String requestJsonString) throws ServerException {
+
         AddRatingRequest addRatingRequest = gson.fromJson(requestJsonString, AddRatingRequest.class);
         String tokenId = addRatingRequest.getTokenId();
+        Integer rating = addRatingRequest.getRating();
+        if (rating < 0 || rating > 5 || rating == null) {
+            throw  new ServerException(Error.RATING_IS_ERROR);
+        }
 
         if (!isTokenValid(tokenId)) {
             return gson.toJson(new ServerException(Error.TOKEN_INVALID),ServerException.class);
