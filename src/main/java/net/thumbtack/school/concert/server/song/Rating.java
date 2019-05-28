@@ -1,12 +1,14 @@
 package net.thumbtack.school.concert.server.song;
 
 import net.thumbtack.school.concert.User;
+import net.thumbtack.school.concert.server.Error;
+import net.thumbtack.school.concert.server.ServerException;
 
 public class Rating {
     private Integer rating;
     private User author;
 
-    public Rating(Integer rating, User author) {
+    public Rating(Integer rating, User author) throws ServerException {
         setRating(rating);
         setAuthor(author);
     }
@@ -23,9 +25,9 @@ public class Rating {
         this.author = author;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Integer rating) throws ServerException {
         if (rating < 0 || rating > 5 || rating == null) {
-            //TODO: exeption expected
+            throw new ServerException(Error.RATING_IS_ERROR);
         }
         this.rating = rating;
 
