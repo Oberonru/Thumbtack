@@ -1,6 +1,10 @@
 package net.thumbtack.school.concert.server.song;
 
+import net.thumbtack.school.concert.server.Error;
+import net.thumbtack.school.concert.server.ServerException;
+
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +16,7 @@ public class Song {
     private String singer;
     private double time;
     private String songId;
-    private List<Rating> ratingList;
+    private List<Rating> ratingList = new ArrayList<>();
 
     public Song(String name, String[] musician, String[] author, String singer, double time) {
         setName(name);
@@ -77,13 +81,17 @@ public class Song {
         return ratingList;
     }
 
-    public void addRating(Rating rating) {
+    public void addRating(Rating rating) throws Exception {
         if (rating.getRating() == 0) {
             rating.setRating(null);
-         }
-         if (rating.getRating() >=1 && rating.getRating() <= 5) {
+        }
+        if (rating.getRating() >= 1 && rating.getRating() <= 5) {
+            //TODO: некорректно
             rating.setRating(rating.getRating());
-         }
+        }
+        if (rating.getRating() < 0 || rating.getRating() > 5) {
+            throw new ServerException(Error.RATING_IS_ERROR);
+        }
         ratingList.add(rating);
     }
 
