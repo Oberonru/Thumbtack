@@ -6,6 +6,7 @@ import net.thumbtack.school.concert.server.model.*;
 import net.thumbtack.school.concert.server.song.Rating;
 import net.thumbtack.school.concert.server.song.Song;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -77,7 +78,7 @@ public class Server {
         return "{}";
     }
 
-    public String addRating(String requestJsonString) throws ServerException {
+    public String addRating(String requestJsonString) throws Exception {
         AddRatingRequest addRatingRequest = gson.fromJson(requestJsonString, AddRatingRequest.class);
         String tokenId = addRatingRequest.getTokenId();
         Integer rating = addRatingRequest.getRating();
@@ -155,4 +156,20 @@ public class Server {
         }
         return null;
     }
+
+    /**
+     * Поиск песни по ёё уникальному номеру songId
+      * @param requestSongId
+     * @return new Song
+     */
+    private Song findSongBySongId(String requestSongId) {
+
+        for (Song song : songList) {
+            if (song != null && song.getSongId().equals(requestSongId)) {
+                return song;
+            }
+        }
+        return null;
+    }
+
 }
