@@ -78,7 +78,6 @@ public class Server {
     }
 
     public String addRating(String requestJsonString) throws ServerException {
-
         AddRatingRequest addRatingRequest = gson.fromJson(requestJsonString, AddRatingRequest.class);
         String tokenId = addRatingRequest.getTokenId();
         Integer rating = addRatingRequest.getRating();

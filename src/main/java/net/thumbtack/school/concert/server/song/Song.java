@@ -78,7 +78,12 @@ public class Song {
     }
 
     public void addRating(Rating rating) {
-        //TODO: if current user rating is set then replace rating or delete (if rating == 0)
+        if (rating.getRating() == 0) {
+            rating.setRating(null);
+         }
+         if (rating.getRating() >=1 && rating.getRating() <= 5) {
+            rating.setRating(rating.getRating());
+         }
         ratingList.add(rating);
     }
 
