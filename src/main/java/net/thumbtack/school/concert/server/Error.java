@@ -8,7 +8,9 @@ public enum Error {
     PERSON_IS_NOTREGISTREED("Пользователь не зарегистроирован"),
     SERVER_IS_STARTED("Сервер уже запущен"),
     SERVER_IS_NOTSTARTED("Сервер не запущен"),
-    LGIN_INVALID("Ошибка при указании логина"),
+    LGIN_IS_ERROR("Ошибка при указании логина"),
+    PASSWORD_IS_ERROR("Неверный пароль"),
+    PASSWORD_IS_SHORT("Пароль содержит менее трёх символов"),
     RATING_IS_ERROR("Ошибка при добавлении рейтинга");
 
     private String Error;

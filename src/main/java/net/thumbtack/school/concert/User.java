@@ -1,5 +1,6 @@
 package net.thumbtack.school.concert;
 
+import com.google.gson.Gson;
 import net.thumbtack.school.concert.server.Error;
 import net.thumbtack.school.concert.server.ServerException;
 import net.thumbtack.school.concert.server.song.Song;
@@ -38,18 +39,18 @@ public class User {
 
     public void setLogin(String login) throws Exception {
         if (login.length() < 4 || login.length() > 128 || login == null) {
-            throw new ServerException(Error.LGIN_INVALID);
+            throw new ServerException(Error.LGIN_IS_ERROR);
         }
         this.login = login;
     }
 
-    public String getPassword() {
+    public String getPassword(){
         return password;
     }
 
-    public void setPassword(String password) {
-        if (this.password.equals(password)) {
-            //так корректно будет?
+    public void setPassword(String password) throws Exception {
+        if (password.length() < 3) {
+            throw new ServerException(Error.PASSWORD_IS_SHORT);
         }
         this.password = password;
     }
