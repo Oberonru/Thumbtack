@@ -14,8 +14,6 @@ public class User {
     private String login;
     private String password;
     private String token;
-    //список песен каждого пользователя
-    private List<Song> personSongList;
 
     public User() {
     }
@@ -25,12 +23,11 @@ public class User {
         setPassword(password);
     }
 
-    public User(String lastName, String firstName, String login, String password, List<Song> personSongList) throws Exception {
+    public User(String lastName, String firstName, String login, String password) throws Exception {
         this.lastName = lastName;
         this.firstName = firstName;
         setLogin(login);
         setPassword(password);
-        this.personSongList = personSongList;
     }
 
     public String getLogin() {
@@ -44,8 +41,8 @@ public class User {
         this.login = login;
     }
 
-    public String getPassword(){
-        return password;
+    public boolean verifyPassword(String password){
+        return this.password.equals(password);
     }
 
     public void setPassword(String password) throws Exception {
